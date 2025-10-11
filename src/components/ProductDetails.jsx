@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import chem1 from "../images/chemical-main.png"
 import L from "../images/L.png"
 import earth from "../images/pruthvi.png"
@@ -8,6 +8,8 @@ import rupees from "../images/rupees.png"
 import { useNavigate, useParams } from 'react-router-dom';
 import countries from "../pages/CountryStateCity.json";
 import { BASE_URL } from '../BASE_URL';
+import chemicalLogo from "../images/anbizz-logo.png";
+
 
 function getInitials(companyName) {
     if (!companyName) return '';
@@ -27,6 +29,7 @@ const ProductDetails = () => {
 
     const [productDetail, setProductDetail] = useState([])
     const [productSuppliers, setProductSuppliers] = useState([])
+    const [downloading, setDownloading] = useState(false);
     // console.log(productSuppliers)
 
     const fetchPrducts = async () => {
@@ -107,6 +110,66 @@ const ProductDetails = () => {
         setFocused3(false);
     };
 
+    const handleDownload = async (structureImg, e) => {
+        
+        e.stopPropagation();
+        setDownloading(true);
+        
+        try {
+            // Create a canvas to combine the images
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Load both images
+            const backgroundImg = new Image();
+            backgroundImg.crossOrigin = "Anonymous";
+            backgroundImg.src = chemicalLogo;
+            
+            const foregroundImg = new Image();
+            foregroundImg.crossOrigin = "Anonymous";
+            foregroundImg.src = structureImg;
+            
+            // Wait for both images to load
+            await Promise.all([
+                new Promise(resolve => { backgroundImg.onload = resolve; }),
+                new Promise(resolve => { foregroundImg.onload = resolve; })
+            ]);
+            
+            // Set canvas dimensions
+            canvas.width = foregroundImg.width;
+            canvas.height = foregroundImg.height;
+            
+            // Draw background (scaled to fit)
+            const bgAspect = backgroundImg.width / backgroundImg.height;
+            const fgAspect = foregroundImg.width / foregroundImg.height;
+            
+            if (bgAspect > fgAspect) {
+                // Background is wider relative to its height than foreground
+                const bgHeight = foregroundImg.height;
+                const bgWidth = bgHeight * bgAspect;
+                ctx.drawImage(backgroundImg, (foregroundImg.width - bgWidth) / 2, 0, bgWidth, bgHeight);
+            } else {
+                // Background is taller relative to its width than foreground
+                const bgWidth = foregroundImg.width;
+                const bgHeight = bgWidth / bgAspect;
+                ctx.drawImage(backgroundImg, 0, (foregroundImg.height - bgHeight) / 2, bgWidth, bgHeight);
+            }
+            
+            // Draw the chemical structure image on top
+            ctx.drawImage(foregroundImg, 0, 0);
+            
+            // Create download link
+            const link = document.createElement('a');
+            link.download = 'chemical-with-logo.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        } catch (error) {
+            console.error('Error downloading image:', error);
+        }
+        
+        setDownloading(false);
+    };
+
     const filteredData = productSuppliers?.filter(item => {
         const minPrice = Number(item?.catalog?.min_price);
         const maxPrice = Number(item?.catalog?.max_price);
@@ -138,8 +201,29 @@ const ProductDetails = () => {
                         <div className="flex flex-col p-2">
                             <div className=''>
                                 <div className='sm:flex block bg-white gap-6 border py-8 sm:px-10 px-4 rounded-lg shadow-md'>
-                                    <div className='sm:h-[100%] h-[100px] rounded-md'>
-                                        <img src={productDetail?.product?.structure} alt="" className='w-[50%]  ml-[20%]' />
+                                    <div className='relative w-full sm:w-auto flex justify-center'>
+                                        <div 
+                                            className="absolute inset-0 bg-center bg-contain bg-no-repeat z-0"
+                                            style={{ 
+                                                backgroundImage: `url(${chemicalLogo})`,
+                                                opacity: 0.7 
+                                            }}
+                                        ></div>
+                                        <img
+                                            src={productDetail?.product?.structure}
+                                            alt={productDetail?.product?.name_of_chemical}
+                                            className='w-[50%] relative z-10'
+                                        />
+                                        <button 
+                                            onClick={(event) => handleDownload(productDetail?.product?.structure, event)}
+                                            disabled={downloading}
+                                            className="absolute top-0 right-0 bg-gray-200 hover:bg-gray-300 rounded p-1 z-20"
+                                            title="Download image"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                            </svg>
+                                        </button>
                                     </div>
                                     <div className='w-full'>
                                         <h2 className='sm:text-2xl text-md font-semibold w-full pb-3'>{productDetail?.product?.name_of_chemical}</h2>

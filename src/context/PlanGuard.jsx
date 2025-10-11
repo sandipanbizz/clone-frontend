@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../BASE_URL";
+import { toast } from "react-toastify";
 
 const PlanGuard = ({ children }) => {
   const [loading, setLoading] = useState(true);
@@ -33,7 +34,8 @@ const PlanGuard = ({ children }) => {
       const isInPaymentPage = currentPath.startsWith("/company/PackagePayment");
 
       if (data?.success === false && response.status === 404) {
-        if (!isInPaymentPage) {
+        toast.error(data.message)
+        if (isInPaymentPage) {
           navigate("/pricing");
         }
         return;
@@ -52,7 +54,7 @@ const PlanGuard = ({ children }) => {
           setTimeout(() => setShowNotification(false), 4000); // Hide after 5 seconds
         }
       } else {
-        if (!isInPaymentPage) {
+        if (isInPaymentPage) {
           navigate("/pricing");
         }
       }

@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import HomePage from "./pages/HomePage";
+import { HelmetProvider } from "react-helmet-async";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import About from "./pages/About";
@@ -31,252 +32,264 @@ import TermsCondition from "./pages/Terms&Condition";
 import PrivacyPolicies from "./pages/PrivacyPolicies";
 import Blog from "./pages/Blog";
 import BlogDetail from "./pages/BlogDetail";
-
+import PaymentSuccess from './components/PaymentSuccess';
+import PaymentFailure from './components/PaymentFailure';
+import PaymentStatus from './components/PaymentStatus';
 import PlanGuard from "./context/PlanGuard"
+import EmailVerifySuccess from "./pages/EmailVerification";
+import RegisterSuccess from "./pages/RegisterSuccess";
+
 
 
 function App() {
   return (
-    <BrowserRouter>
-      <ActiveContextProvider>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <>
-                <Header />
-                <HomePage />
-                <Footer />
-              </>
-            }
-          />
-          <Route
-            path="/about"
-            element={
-              <>
-                <Header />
-                <About />
-                <Footer />
-              </>
-            }
-          />
-          <Route
-            path="/contact"
-            element={
-              <>
-                <Header />
-                <Contact />
-                <Footer />
-              </>
-            }
-          />
-          <Route
-            path="/pricing"
-            element={
-              <>
-                <Header />
-                <Pricing />
-                <Footer />
-              </>
-            }
-          />
-          <Route
-            path="/buying"
-            element={
-              <>
-                <Header />
-                <BuyList />
-                <Footer />
-              </>
-            }
-          />
-          <Route
-            path="/company-profile/:_id"
-            element={
-              <>
-                <Header />
-                <CompanyProfile />
-                <Footer />
-              </>
-            }
-          />
-          <Route
-            path="/product-detail/:_id"
-            element={
-              <>
-                <Header />
-                <ChemicalDetail />
-                <Footer />
-              </>
-            }
-          />
-          <Route
-            path="/signup"
-            element={
-              <>
-                <Header />
-                <CreateAccount />
-                <Footer />
-              </>
-            }
-          />
-          <Route
-            path="/login"
-            element={
-              <>
-                <Header />
-                <Login />
-                <Footer />
-              </>
-            }
-          />
-          <Route
-            path="/payment"
-            element={
-              <>
-                <Header />
-                <Payment />
-                <Footer />
-              </>
-            }
-          />
-          <Route
-            path="/payment2/:_id"
-            element={
-              <>
-                <Header />
-                <Payment2 />
-                <Footer />
-              </>
-            }
-          />
-          <Route
-            path="/terms-and-conditions"
-            element={
-              <>
-                <Header />
-                <TermsCondition />
-                <Footer />
-              </>
-            }
-          />
-          <Route
-            path="/privacy-policies"
-            element={
-              <>
-                <Header />
-                <PrivacyPolicies />
-                <Footer />
-              </>
-            }
-          />
+    <HelmetProvider>
+      <BrowserRouter>
+        <ActiveContextProvider>
+          <Routes>
+            <Route path="/payment/success" element={<PaymentSuccess />} />
+            <Route path="/payment/failure" element={<PaymentFailure />} />
+            <Route
+              path="/"
+              element={
+                <>
+                  <Header />
+                  <HomePage />
+                  <Footer />
+                </>
+              }
+            />
+            <Route
+              path="/about"
+              element={
+                <>
+                  <Header />
+                  <About />
+                  <Footer />
+                </>
+              }
+            />
+            <Route
+              path="/contact"
+              element={
+                <>
+                  <Header />
+                  <Contact />
+                  <Footer />
+                </>
+              }
+            />
+            <Route
+              path="/pricing"
+              element={
+                <>
+                  <Header />
+                  <Pricing />
+                  <Footer />
+                </>
+              }
+            />
+            <Route
+              path="/buying"
+              element={
+                <>
+                  <Header />
+                  <BuyList />
+                  <Footer />
+                </>
+              }
+            />
+            <Route
+              path="/company-profile/:_id"
+              element={
+                <>
+                  <Header />
+                  <CompanyProfile />
+                  <Footer />
+                </>
+              }
+            />
+            <Route
+              path="/product-detail/:_id"
+              element={
+                <>
+                  <Header />
+                  <ChemicalDetail />
+                  <Footer />
+                </>
+              }
+            />
+            <Route path="/verify-success" element={<EmailVerifySuccess />} />
+            <Route path="/register-success" element={<RegisterSuccess />} />
+            <Route
+              path="/signup"
+              element={
+                <>
+                  <Header />
+                  <CreateAccount />
+                  <Footer />
+                </>
+              }
+            />
+            <Route
+              path="/login"
+              element={
+                <>
+                  <Header />
+                  <Login />
+                  <Footer />
+                </>
+              }
+            />
+            <Route
+              path="/payment"
+              element={
+                <>
+                  <Header />
+                  <Payment />
+                  <Footer />
+                </>
+              }
+            />
+            <Route
+              path="/payment2/:_id"
+              element={
+                <>
+                  <Header />
+                  <Payment2 />
+                  <Footer />
+                </>
+              }
+            />
+            <Route
+              path="/terms-and-conditions"
+              element={
+                <>
+                  <Header />
+                  <TermsCondition />
+                  <Footer />
+                </>
+              }
+            />
+            <Route
+              path="/privacy-policies"
+              element={
+                <>
+                  <Header />
+                  <PrivacyPolicies />
+                  <Footer />
+                </>
+              }
+            />
 
-          <Route
-            path="/blogs"
-            element={
-              <>
-                <Header />
-                <Blog />
-                <Footer />
-              </>
-            }
-          />
+            <Route
+              path="/blogs"
+              element={
+                <>
+                  <Header />
+                  <Blog />
+                  <Footer />
+                </>
+              }
+            />
 
-          <Route
-            path="/blog-detail"
-            element={
-              <>
-                <Header />
-                <BlogDetail />
-                <Footer />
-              </>
-            }
-          />
+            <Route
+              path="/blog-detail"
+              element={
+                <>
+                  <Header />
+                  <BlogDetail />
+                  <Footer />
+                </>
+              }
+            />
 
-          <Route
-            path="/company/*"
-            element={
-              <PlanGuard>
-                <AdminPage>
-                  <Routes>
-                    <Route path="dashboard" element={<DashBoard />} />
-                    <Route path="employees" element={<Employees />} />
-                    <Route path="documents" element={<MyDocuments />} />
-                    <Route path="catalog" element={<MyCataLog />} />
-                    <Route path="profile" element={<CompanyProfile />} />
-                    <Route path="change-password" element={<ChangePassword />} />
-                    <Route path="insert-chemical" element={<Addchemical />} />
-                    <Route path="message" element={<Message />} />
-                  </Routes>
-                </AdminPage>
-              </PlanGuard>
-            }
-          />
+            <Route
+              path="/company/*"
+              element={
+                <PlanGuard>
+                  <AdminPage>
+                    <Routes>
+                      <Route path="dashboard" element={<DashBoard />} />
+                      <Route path="employees" element={<Employees />} />
+                      <Route path="documents" element={<MyDocuments />} />
+                      <Route path="catalog" element={<MyCataLog />} />
+                      <Route path="profile" element={<CompanyProfile />} />
+                      <Route path="change-password" element={<ChangePassword />} />
+                      <Route path="insert-chemical" element={<Addchemical />} />
+                      <Route path="message" element={<Message />} />
+                    </Routes>
+                  </AdminPage>
+                </PlanGuard>
+              }
+            />
 
-          <Route
-            path="/invoice1/:_id"
-            element={
-              <>
-                {/* <Header /> */}
-                <Invoice1 />
-                {/* <Footer /> */}
-              </>
-            }
-          />
-          <Route
-            path="/invoice2"
-            element={
-              <>
-                {/* <Header /> */}
-                <Invoice2 />
-                {/* <Footer /> */}
-              </>
-            }
-          />
-          <Route
-            path="/invoice3/:_id"
-            element={
-              <>
-                {/* <Header /> */}
-                <Invoice3 />
-                {/* <Footer /> */}
-              </>
-            }
-          />
-          <Route
-            path="/forgot-password"
-            element={
-              <>
-                <Header />
-                <ForgotPassword />
-                <Footer />
-              </>
-            }
-          />
-          <Route
-            path="/verify-otp"
-            element={
-              <>
-                <Header />
-                <OtpVerification />
-                <Footer />
-              </>
-            }
-          />
-          <Route
-            path="/create-password"
-            element={
-              <>
-                <Header />
-                <CreateNewPassword />
-                <Footer />
-              </>
-            }
-          />
-          {/* <Route path="*" element={<Navigate to="/" />} /> */}
-        </Routes>
-      </ActiveContextProvider>
-    </BrowserRouter>
+            <Route
+              path="/invoice1/:_id"
+              element={
+                <>
+                  {/* <Header /> */}
+                  <Invoice1 />
+                  {/* <Footer /> */}
+                </>
+              }
+            />
+            <Route
+              path="/invoice2"
+              element={
+                <>
+                  {/* <Header /> */}
+                  <Invoice2 />
+                  {/* <Footer /> */}
+                </>
+              }
+            />
+            <Route
+              path="/invoice3/:_id"
+              element={
+                <>
+                  {/* <Header /> */}
+                  <Invoice3 />
+                  {/* <Footer /> */}
+                </>
+              }
+            />
+            <Route
+              path="/forgot-password"
+              element={
+                <>
+                  <Header />
+                  <ForgotPassword />
+                  <Footer />
+                </>
+              }
+            />
+            <Route
+              path="/verify-otp"
+              element={
+                <>
+                  <Header />
+                  <OtpVerification />
+                  <Footer />
+                </>
+              }
+            />
+            <Route
+              path="/create-password"
+              element={
+                <>
+                  <Header />
+                  <CreateNewPassword />
+                  <Footer />
+                </>
+              }
+            />
+            {/* <Route path="*" element={<Navigate to="/" />} /> */}
+          </Routes>
+        </ActiveContextProvider>
+      </BrowserRouter>
+    </HelmetProvider>
+
   );
 }
 

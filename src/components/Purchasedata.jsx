@@ -23,7 +23,7 @@ import Invoice3 from "./Invoice3";
 import { DisplayPoContext } from "../context/PoViewContext";
 import { BASE_URL } from "../BASE_URL";
 
-import {exportToExcel} from "../utils/exportToExcel"
+import { exportToExcel } from "../utils/exportToExcel"
 import { MdOutlineFileDownload } from "react-icons/md";
 import generateRandomPrefix from "../utils/randomPrefix";
 
@@ -57,7 +57,7 @@ const Purchasedata = () => {
   const [focusedS, setFocusedS] = useState(true);
   const [focusedPoType, setFocusedPoType] = useState(true);
 
-  const photoView = () => {};
+  const photoView = () => { };
 
   const [reason, setReason] = useState(false);
 
@@ -68,14 +68,14 @@ const Purchasedata = () => {
   const [prefix, setPrefix] = useState("");
 
   const cancelSubmit = () => {
-    let prefixValue= prefix
+    let prefixValue = prefix
     if (!prefix) {
-      prefixValue= generateRandomPrefix();
+      prefixValue = generateRandomPrefix();
       setPrefix(prefixValue)
     }
 
     const finalPrefix = prefixValue + "_";
-    
+
     navigate("/company/generate-new-manual-po", {
       state: { abc: "PO", prefix: finalPrefix, manual: "manual" },
     });
@@ -253,7 +253,7 @@ const Purchasedata = () => {
   const displayedData = useMemo(() => {
     return ascending ? filteredData : [...filteredData].reverse();
   }, [filteredData, ascending]);
-  
+
 
   const clearFilters = () => {
     setSearchQuery("");
@@ -283,6 +283,7 @@ const Purchasedata = () => {
 
   const handleReturnOrder = (e) => {
     navigate(`/company/buying-inquiry-detail/${e}`, { state: "returnOrder" });
+    // /company/buying-inquiry-detail/68d625803afbe1c3a0ac2630
   };
 
   const handleEdit = (item) => {
@@ -300,10 +301,10 @@ const Purchasedata = () => {
   };
 
   const downloadPo = useMemo(() => {
- 
+
     return [...displayedData].reverse().map((item) => {
       let PO_type = getPoTypeByIdAndType(item.buyer_company_id, item.invoice_mode);
-  
+
       console.log("item", item);
 
       return {
@@ -319,17 +320,17 @@ const Purchasedata = () => {
       };
     });
   }, [displayedData]);
-  
-
-  
-// here we will write function for download po data ;
-
-const handleDownload = () => {
-  exportToExcel(downloadPo, 'PO_Data');
-};
 
 
- 
+
+  // here we will write function for download po data ;
+
+  const handleDownload = () => {
+    exportToExcel(downloadPo, 'PO_Data');
+  };
+
+
+
 
   return (
     <div className="w-full overflow-x-hidden">
@@ -339,13 +340,13 @@ const handleDownload = () => {
             Purchase Order Data
           </h1>
           <div className="flex items-center gap-5">
-          <button
-            className="bg-darkBlue h-[100%] text-white text-xs sm:px-20 px-5 rounded-[10px] sm:block hidden"
-            onClick={handleGenrate}
-          >
-            Generate PO
-          </button>
-          <button onClick={handleDownload}  className="bg-darkBlue h-[100%] text-[25px] text-white text-xs sm: px-3 rounded-[10px] sm:block hidden"> <img className="h-[15px]" src="https://chembizzstorage.blob.core.windows.net/chembizz-files/download_img.png" alt="" /> </button>
+            <button
+              className="bg-darkBlue h-[100%] text-white text-xs sm:px-20 px-5 rounded-[10px] sm:block hidden"
+              onClick={handleGenrate}
+            >
+              Generate PO
+            </button>
+            <button onClick={handleDownload} className="bg-darkBlue h-[100%] text-[25px] text-white text-xs sm: px-3 rounded-[10px] sm:block hidden"> <img className="h-[15px]" src="https://chembizzstorage.blob.core.windows.net/chembizz-files/download_img.png" alt="" /> </button>
           </div>
           <button
             className="bg-darkBlue text-white text-lg sm:px-20 px-5 rounded-[5px] sm:hidden block"
@@ -556,9 +557,8 @@ const handleDownload = () => {
           {/* Sliding filter panel */}
           <div className="bg-black/[0.3]">
             <div
-              className={`fixed top-0 right-0 h-full bg-white shadow-lg transition-transform ${
-                showFilters ? "translate-x-0" : "translate-x-full"
-              } w-[300px] p-4`}
+              className={`fixed top-0 right-0 h-full bg-white shadow-lg transition-transform ${showFilters ? "translate-x-0" : "translate-x-full"
+                } w-[300px] p-4`}
             >
               <button
                 onClick={toggleFilterPanel}
@@ -589,13 +589,11 @@ const handleDownload = () => {
               <div className="flex flex-col justify-center items-center relative w-full mt-2">
                 <label
                   htmlFor="inputField"
-                  className={`transition-all ${
-                    focused
-                      ? "text-xs top-0 left-[2%] bg-white"
-                      : "text-xs top-[45%] left-[5%]"
-                  } ${
-                    focused ? "text-gray-500" : "text-gray-700"
-                  } absolute pointer-events-none px-1`}
+                  className={`transition-all ${focused
+                    ? "text-xs top-0 left-[2%] bg-white"
+                    : "text-xs top-[45%] left-[5%]"
+                    } ${focused ? "text-gray-500" : "text-gray-700"
+                    } absolute pointer-events-none px-1`}
                 >
                   Chemical Name
                 </label>
@@ -615,13 +613,11 @@ const handleDownload = () => {
               <div className="flex flex-col justify-center items-center relative mt-2">
                 <label
                   htmlFor="inputField"
-                  className={`transition-all ${
-                    focused1
-                      ? "text-xs top-0 left-[2%] bg-white"
-                      : "text-xs top-[45%] left-[5%]"
-                  } ${
-                    focused ? "text-gray-500" : "text-gray-700"
-                  } absolute pointer-events-none px-1`}
+                  className={`transition-all ${focused1
+                    ? "text-xs top-0 left-[2%] bg-white"
+                    : "text-xs top-[45%] left-[5%]"
+                    } ${focused ? "text-gray-500" : "text-gray-700"
+                    } absolute pointer-events-none px-1`}
                 >
                   Seller Company Name
                 </label>
@@ -641,13 +637,11 @@ const handleDownload = () => {
               <div className="flex flex-col justify-center items-center relative mt-2">
                 <label
                   htmlFor="inputField"
-                  className={`transition-all ${
-                    focused2
-                      ? "text-xs top-0 left-[2%] bg-white"
-                      : "text-xs top-[45%] left-[5%]"
-                  } ${
-                    focused2 ? "text-gray-500" : "text-gray-700"
-                  } absolute pointer-events-none px-1`}
+                  className={`transition-all ${focused2
+                    ? "text-xs top-0 left-[2%] bg-white"
+                    : "text-xs top-[45%] left-[5%]"
+                    } ${focused2 ? "text-gray-500" : "text-gray-700"
+                    } absolute pointer-events-none px-1`}
                 >
                   Amount
                 </label>
@@ -667,13 +661,11 @@ const handleDownload = () => {
               <div className="flex flex-col justify-center items-center relative mt-2">
                 <label
                   htmlFor="selectField"
-                  className={`transition-all ${
-                    focusedPoType
-                      ? "text-xs top-0 left-[2%] bg-white"
-                      : "text-xs top-[45%] left-[5%]"
-                  } ${
-                    focusedPoType ? "text-gray-500" : "text-gray-700"
-                  } absolute pointer-events-none px-1`}
+                  className={`transition-all ${focusedPoType
+                    ? "text-xs top-0 left-[2%] bg-white"
+                    : "text-xs top-[45%] left-[5%]"
+                    } ${focusedPoType ? "text-gray-500" : "text-gray-700"
+                    } absolute pointer-events-none px-1`}
                 >
                   PO Type
                 </label>
@@ -698,13 +690,11 @@ const handleDownload = () => {
               <div className="flex flex-col justify-center items-center relative mt-2 w-full">
                 <label
                   htmlFor="selectField"
-                  className={`transition-all ${
-                    focusedS
-                      ? "text-xs top-0 left-[2%] bg-white"
-                      : "text-xs top-[45%] left-[5%]"
-                  } ${
-                    focusedS ? "text-gray-500" : "text-gray-700"
-                  } absolute pointer-events-none px-1`}
+                  className={`transition-all ${focusedS
+                    ? "text-xs top-0 left-[2%] bg-white"
+                    : "text-xs top-[45%] left-[5%]"
+                    } ${focusedS ? "text-gray-500" : "text-gray-700"
+                    } absolute pointer-events-none px-1`}
                 >
                   Inquiry Type
                 </label>
@@ -728,13 +718,11 @@ const handleDownload = () => {
               <div className="flex flex-col justify-center items-center relative mt-2">
                 <label
                   htmlFor="inputField"
-                  className={`transition-all ${
-                    focused3
-                      ? "text-xs top-0 left-[2%] bg-white"
-                      : "text-xs top-[45%] left-[5%]"
-                  } ${
-                    focused ? "text-gray-500" : "text-gray-700"
-                  } absolute pointer-events-none px-1`}
+                  className={`transition-all ${focused3
+                    ? "text-xs top-0 left-[2%] bg-white"
+                    : "text-xs top-[45%] left-[5%]"
+                    } ${focused ? "text-gray-500" : "text-gray-700"
+                    } absolute pointer-events-none px-1`}
                 >
                   PO Number
                 </label>
@@ -755,13 +743,11 @@ const handleDownload = () => {
                 <div className="flex flex-col justify-center items-center relative w-full">
                   <label
                     htmlFor="inputDate"
-                    className={`transition-all ${
-                      focusedD
-                        ? "text-xs top-0 left-[2%] bg-white"
-                        : "text-base"
-                    } ${
-                      focusedD ? "text-gray-500" : "text-gray-700"
-                    } absolute pointer-events-none px-1`}
+                    className={`transition-all ${focusedD
+                      ? "text-xs top-0 left-[2%] bg-white"
+                      : "text-base"
+                      } ${focusedD ? "text-gray-500" : "text-gray-700"
+                      } absolute pointer-events-none px-1`}
                   >
                     FROM
                   </label>
@@ -770,9 +756,8 @@ const handleDownload = () => {
                     type="date"
                     value={fromDateQuery}
                     onChange={handleFromDateChange}
-                    className={`border border-black w-full rounded-lg px-3 py-2 mt-2 focus:outline-none focus:border-blue-500 ${
-                      focusedD ? "focused" : ""
-                    }`}
+                    className={`border border-black w-full rounded-lg px-3 py-2 mt-2 focus:outline-none focus:border-blue-500 ${focusedD ? "focused" : ""
+                      }`}
                   />
                 </div>
               </div>
@@ -781,13 +766,11 @@ const handleDownload = () => {
                 <div className="flex flex-col justify-center items-center relative w-full">
                   <label
                     htmlFor="inputDate"
-                    className={`transition-all ${
-                      focusedD
-                        ? "text-xs top-0 left-[2%] bg-white"
-                        : "text-base"
-                    } ${
-                      focusedD ? "text-gray-500" : "text-gray-700"
-                    } absolute pointer-events-none px-1`}
+                    className={`transition-all ${focusedD
+                      ? "text-xs top-0 left-[2%] bg-white"
+                      : "text-base"
+                      } ${focusedD ? "text-gray-500" : "text-gray-700"
+                      } absolute pointer-events-none px-1`}
                   >
                     TO
                   </label>
@@ -797,9 +780,8 @@ const handleDownload = () => {
                     value={toDateQuery}
                     min={fromDateQuery}
                     onChange={handleToDateChange}
-                    className={`border border-black w-full rounded-lg px-3 py-2 mt-2 focus:outline-none focus:border-blue-500 ${
-                      focusedD ? "focused" : ""
-                    }`}
+                    className={`border border-black w-full rounded-lg px-3 py-2 mt-2 focus:outline-none focus:border-blue-500 ${focusedD ? "focused" : ""
+                      }`}
                   />
                 </div>
               </div>
@@ -830,9 +812,8 @@ const handleDownload = () => {
                   [...displayedData].reverse().map((item, index) => (
                     <React.Fragment key={index}>
                       <tr
-                        className={`flex py-2 ${
-                          index % 2 === 0 ? "bg-white" : "bg-gray-100"
-                        }`}
+                        className={`flex py-2 ${index % 2 === 0 ? "bg-white" : "bg-gray-100"
+                          }`}
                       >
                         <td className=" ps-2 text-center py-2 flex flex-col sm:justify-center justify-start font-semibold">
                           <span className={`px-2`}>
@@ -971,13 +952,13 @@ const handleDownload = () => {
                               <div className="py-1">
                                 {item?.buyer_company_id ===
                                   localStorage.getItem("myCompanyId") && (
-                                  <button
-                                    className="block w-full text-left px-4 py-2 text-xs hover:bg-gray-100 focus:outline-none"
-                                    onClick={() => handleEdit(item)}
-                                  >
-                                    Edit PO
-                                  </button>
-                                )}
+                                    <button
+                                      className="block w-full text-left px-4 py-2 text-xs hover:bg-gray-100 focus:outline-none"
+                                      onClick={() => handleEdit(item)}
+                                    >
+                                      Edit PO
+                                    </button>
+                                  )}
                                 {item?.invoice_mode !== "manual" && (
                                   <button className="block w-full text-left px-4 py-2 text-xs hover:bg-gray-100 focus:outline-none">
                                     Repeat Inquiry
@@ -989,17 +970,17 @@ const handleDownload = () => {
                                 >
                                   View/Print PO
                                 </button>
-                                {item?.inquiry_details?.[0]?.status ===
-                                  "delivered" && (
-                                  <button
-                                    className="block w-full text-left px-4 py-2 text-xs hover:bg-gray-100 focus:outline-none"
-                                    onClick={() =>
-                                      handleReturnOrder(item.inquiry_id)
-                                    }
-                                  >
-                                    Return Order
-                                  </button>
-                                )}
+                                {getPoTypeByIdAndType(item.buyer_company_id, item.invoice_mode) === "Generated Po" &&
+                                  item?.inquiry_details?.[0]?.status === "delivered" && (
+                                    <button
+                                      className="block w-full text-left px-4 py-2 text-xs hover:bg-gray-100 focus:outline-none"
+                                      onClick={() =>
+                                        handleReturnOrder(item.inquiry_id)
+                                      }
+                                    >
+                                      Return Order
+                                    </button>
+                                  )}
                               </div>
                             </div>
                           )}

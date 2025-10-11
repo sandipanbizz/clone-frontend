@@ -59,8 +59,8 @@ const EditManualPo = () => {
     const [selectAddress, setSelectAddress] = useState(false)
     const [productDetailArray, setProductDetailArray] = useState([])
     const [alreadyData, setAlreadyData] = useState("")
-    const [poStatus,setPostatus]=useState("invoice")
-    const [openCancelPo,setCancelPo]= useState(false);
+    const [poStatus, setPostatus] = useState("invoice")
+    const [openCancelPo, setCancelPo] = useState(false);
 
     const location = useLocation();
 
@@ -738,7 +738,7 @@ const EditManualPo = () => {
         setDisplayAddProductInput(false);
     };
 
-    const handleCancelPo = async(e) => {
+    const handleCancelPo = async (e) => {
 
 
         e.preventDefault(); // Prevent page reload
@@ -747,11 +747,11 @@ const EditManualPo = () => {
 
         // console.log("reason", reason);
 
-        const updatedProduct = productDetailArray.map((product)=>{
+        const updatedProduct = productDetailArray.map((product) => {
 
             return {
                 ...product,
-                qty:0,
+                qty: 0,
                 taxable_amount: 0,
                 igst: 0,
                 gstAmount: 0,
@@ -761,66 +761,66 @@ const EditManualPo = () => {
 
         setProductDetailArray(updatedProduct);
 
-       
 
-            const newData= { ...formData, product_details: updatedProduct }
-            setFormData(newData);
 
-            const token = `Bearer ${localStorage.getItem("chemicalToken")}`;
-            
-            // Create an object to send as raw JSON
-            const formDataToSend = {};
+        const newData = { ...formData, product_details: updatedProduct }
+        setFormData(newData);
 
-            if (formData.invoice_mode === 'auto') {
-                formDataToSend.inq_type = alreadyData?.inq_type;
-                formDataToSend.inquiry_id = alreadyData?.inquiry_id;
-                formDataToSend.seller_company_id = alreadyData?.seller_company_id;
+        const token = `Bearer ${localStorage.getItem("chemicalToken")}`;
+
+        // Create an object to send as raw JSON
+        const formDataToSend = {};
+
+        if (formData.invoice_mode === 'auto') {
+            formDataToSend.inq_type = alreadyData?.inq_type;
+            formDataToSend.inquiry_id = alreadyData?.inquiry_id;
+            formDataToSend.seller_company_id = alreadyData?.seller_company_id;
+        }
+
+        formDataToSend.cancelMessage = reason;
+        formDataToSend.poId = _id;
+
+        Object.keys(newData).forEach((key) => {
+            if (key === 'product_details') {
+                formDataToSend[key] = newData[key].map((item) => ({ ...item }));
+            } else {
+                formDataToSend[key] = newData[key];
             }
+        });
 
-            formDataToSend.cancelMessage= reason;
-            formDataToSend.poId= _id;
+        try {
 
-            Object.keys(newData).forEach((key) => {
-                if (key === 'product_details') {
-                    formDataToSend[key] = newData[key].map((item) => ({ ...item }));
-                } else {
-                    formDataToSend[key] = newData[key];
-                }
+            const response = await fetch(`${BASE_URL}api/salesInvoice/cancelPo`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': token,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formDataToSend)
             });
 
-            try {
-                
-                const response = await fetch(`${BASE_URL}api/salesInvoice/cancelPo`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': token,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(formDataToSend)
+            const responseData = await response.json();
+
+            if (!response.ok) {
+                toast.error(responseData.message, {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                    autoClose: 1000,
                 });
-    
-                const responseData = await response.json();
-    
-                if (!response.ok) {
-                    toast.error(responseData.message, {
-                        position: toast.POSITION.BOTTOM_RIGHT,
-                        autoClose: 1000,
-                    });
-                } else {
-                    setIsOpenPhoto(true);
-                    setSendData(responseData?.data);
-                    toast.success('PO Cancel Successfully', {
-                        position: toast.POSITION.BOTTOM_RIGHT,
-                        autoClose: 1000,
-                    });
-                }
-            } catch (error) {
-                console.error("Error updating PO:", error);
+            } else {
+                setIsOpenPhoto(true);
+                setSendData(responseData?.data);
+                toast.success('PO Cancel Successfully', {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                    autoClose: 1000,
+                });
             }
+        } catch (error) {
+            console.error("Error updating PO:", error);
+        }
 
 
         setCancelPo(false);
-      
+
     };
 
     const handleProductEdit = (e) => {
@@ -1002,25 +1002,24 @@ const EditManualPo = () => {
                         <h1 className="md:text-3xl text-xl font-semibold">Edit PO</h1>
 
                         <div className="flex gap-5">
-                        <button
-                onClick={()=>setCancelPo(true)}
-                disabled={totals.totalTaxable == 0 || [
-                  "invoice",
-                  "dispatch",
-                  "in transit",
-                  "delivered",
-                ].includes(poStatus)}
-                className={`py-[5px] px-[25px] rounded-[10px] 
-    ${
-        totals.totalTaxable == 0 || ["invoice", "dispatch", "in transit", "delivered","cancel"].includes(poStatus)
-        ? "bg-gray-300 cursor-not-allowed" // Faded color when disabled
-        : "bg-red-500 text-white"
-    }`}
-              >
-                Cancel PO
-              </button>
+                            <button
+                                onClick={() => setCancelPo(true)}
+                                disabled={totals.totalTaxable == 0 || [
+                                    "invoice",
+                                    "dispatch",
+                                    "in transit",
+                                    "delivered",
+                                ].includes(poStatus)}
+                                className={`py-[5px] px-[25px] rounded-[10px] 
+    ${totals.totalTaxable == 0 || ["invoice", "dispatch", "in transit", "delivered", "cancel"].includes(poStatus)
+                                        ? "bg-gray-300 cursor-not-allowed" // Faded color when disabled
+                                        : "bg-red-500 text-white"
+                                    }`}
+                            >
+                                Cancel PO
+                            </button>
                             <button onClick={handleYesNo} className='bg-darkBlue text-white py-[5px]  px-[25px] rounded-[10px]'>Update PO</button>
-                            
+
                         </div>
                     </div>
 
@@ -1150,6 +1149,8 @@ const EditManualPo = () => {
                                                     <option value="15 Days Credit">Credit (15 Days)</option>
                                                     <option value="30 Days Credit">Credit (30 Days)</option>
                                                     <option value="45 Days Credit">Credit (45 Days)</option>
+                                                    <option value="60 Days Credit">Credit (60 Days)</option>
+                                                    <option value="90 Days Credit">Credit (90 Days)</option>
                                                 </select></p>
                                         </div>
                                     </td>
@@ -1431,7 +1432,7 @@ const EditManualPo = () => {
                                         <select value={gst} onChange={handleGst} name="" id="" className='border-2 border-gray-400 py-2 outline-none rounded-md text-gray-500 text-xs  ps-3 w-full '>
                                             <option value="IGST Amount(%)">IGST Amount(%)</option>
                                             <option value="5">5%</option>
-                                            <option value="12">12%</option>
+                                            {/* <option value="12">12%</option> */}
                                             <option value="18">18%</option>
                                             <option value="28">28%</option>
                                         </select>
@@ -1679,49 +1680,49 @@ const EditManualPo = () => {
 
 
                     {openCancelPo && (
-                            <div className="fixed inset-0 z-10 flex justify-center items-center bg-gray-900 bg-opacity-50">
+                        <div className="fixed inset-0 z-10 flex justify-center items-center bg-gray-900 bg-opacity-50">
                             <div className="relative bg-white rounded-lg shadow-xl max-w-md w-full p-6">
                                 {/* Header */}
                                 <div className="flex flex-col items-center">
-                                <XCircle className="h-16 w-16 text-red-500 mb-4" />
-                                <h3 className="font-semibold text-xl text-gray-800 text-center">
-                                    Are you sure you want to cancel this PO?
-                                </h3>
+                                    <XCircle className="h-16 w-16 text-red-500 mb-4" />
+                                    <h3 className="font-semibold text-xl text-gray-800 text-center">
+                                        Are you sure you want to cancel this PO?
+                                    </h3>
                                 </div>
 
                                 {/* Form */}
                                 <form onSubmit={handleCancelPo} className="mt-4">
-                                {/* Textarea for reason */}
-                                <textarea
-                                    name="cancelReason"
-                                    placeholder="Why do you want to cancel the PO?"
-                                    className="w-full border border-red-500 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-red-400"
-                                    rows="3"
-                                    required // Ensures the form cannot be submitted without input
-                                ></textarea>
+                                    {/* Textarea for reason */}
+                                    <textarea
+                                        name="cancelReason"
+                                        placeholder="Why do you want to cancel the PO?"
+                                        className="w-full border border-red-500 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-red-400"
+                                        rows="3"
+                                        required // Ensures the form cannot be submitted without input
+                                    ></textarea>
 
-                                {/* Buttons */}
-                                <div className="flex justify-between gap-3 mt-6">
-                                    <button
-                                    type="submit"
-                                    className="w-full py-2 text-white bg-red-600 rounded-md hover:bg-red-700 transition"
-                                    >
-                                    Yes, Cancel
-                                    </button>
-                                    <button
-                                    type="button"
-                                    onClick={() => setCancelPo(false)}
-                                    className="w-full py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 transition"
-                                    >
-                                    No, Keep
-                                    </button>
-                                </div>
+                                    {/* Buttons */}
+                                    <div className="flex justify-between gap-3 mt-6">
+                                        <button
+                                            type="submit"
+                                            className="w-full py-2 text-white bg-red-600 rounded-md hover:bg-red-700 transition"
+                                        >
+                                            Yes, Cancel
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => setCancelPo(false)}
+                                            className="w-full py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 transition"
+                                        >
+                                            No, Keep
+                                        </button>
+                                    </div>
                                 </form>
                             </div>
-                            </div>
+                        </div>
                     )}
 
-                   
+
 
                     {editTerms && (
                         <>

@@ -12,7 +12,7 @@ import loader from "../images/loading.png";
 import { DisplayPoContext } from '../context/PoViewContext';
 import { BASE_URL } from '../BASE_URL';
 import Select from 'react-select';
-
+import AsyncSelect from 'react-select/async';
 function numberToWords(num) {
     if (num === 0) return "Zero";
 
@@ -55,9 +55,9 @@ const getFormattedDate = () => {
 const GenerateManualPo = () => {
 
     const { displayPo, setDisplayPo } = useContext(DisplayPoContext);
-
+    const [selectedProduct, setSelectedProduct] = useState(null);
     const [loading, setLoading] = useState(false)
-    const [gstLoader,setGstloader]= useState(false);
+    const [gstLoader, setGstloader] = useState(false);
 
     const { _id } = useParams();
 
@@ -253,69 +253,126 @@ const GenerateManualPo = () => {
     const fetchDetailsFromGst = async (gstNumber) => {
         setGstloader(true)
         try {
-          const res = await fetch(`${BASE_URL}api/gst/gstDetails/${gstNumber}`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
-    
-          const response = await res.json();
-    
-          if (response.status_cd == "0") {
-            setGstloader(false)
-            setWrongGst(true);
-          } else {
-            let resData = response.data;
-    
-            const countryName = "India";
-    
-            // Find the corresponding country object
-            const selectedCountry = countries.find(
-              (country) => country.name === countryName
-            );
-            const countryStates = selectedCountry?.states || [];
-    
-            // Find the corresponding state object
-            const selectedState = countryStates.find(
-              (state) => state.name === resData.state
-            );
-            const stateCities = selectedState?.cities || [];
-    
-            // Update form data and states
-            setStates(countryStates);
-            setCities(stateCities);
-    
-            setFormData((prevData) => ({
-              ...prevData,
-              seller_to_gst_in: gstNumber,
-              //   companyName: companyName,
-              seller_to_name: resData.companyName,
-              seller_to_address: resData.address,
-              seller_to_pincode: resData.pinCode,
-              seller_to_country: countryName,
-              seller_to_state: resData.state,
-              seller_to_city: resData.city,
-            }));
+            const res = await fetch(`${BASE_URL}api/gst/gstDetails/${gstNumber}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
 
-            setGstloader(false)
-          }
+            const response = await res.json();
+
+            if (response.status_cd == "0") {
+                setGstloader(false)
+                setWrongGst(true);
+            } else {
+                let resData = response.data;
+
+                const countryName = "India";
+
+                // Find the corresponding country object
+                const selectedCountry = countries.find(
+                    (country) => country.name === countryName
+                );
+                const countryStates = selectedCountry?.states || [];
+
+                // Find the corresponding state object
+                const selectedState = countryStates.find(
+                    (state) => state.name === resData.state
+                );
+                const stateCities = selectedState?.cities || [];
+
+                // Update form data and states
+                setStates(countryStates);
+                setCities(stateCities);
+
+                setFormData((prevData) => ({
+                    ...prevData,
+                    seller_to_gst_in: gstNumber,
+                    //   companyName: companyName,
+                    seller_to_name: resData.companyName,
+                    seller_to_address: resData.address,
+                    seller_to_pincode: resData.pinCode,
+                    seller_to_country: countryName,
+                    seller_to_state: resData.state,
+                    seller_to_city: resData.city,
+                }));
+
+                setGstloader(false)
+            }
         } catch (error) {
-          console.error("Error fetching gst details:", error);
+            console.error("Error fetching gst details:", error);
         }
-      };
-    
-      useEffect(() => {
+    };
+
+    useEffect(() => {
         const fetchGstDetails = async () => {
-          if (formData.seller_to_gst_in.length === 15) {
-            await fetchDetailsFromGst(formData.seller_to_gst_in);
-          }
+            if (formData.seller_to_gst_in.length === 15) {
+                await fetchDetailsFromGst(formData.seller_to_gst_in);
+            }
         };
-    
+
         fetchGstDetails();
-      }, [formData.seller_to_gst_in]);
+    }, [formData.seller_to_gst_in]);
+    const loadProductOptions = async (inputValue) => {
+        try {
+            const token = `Bearer ${localStorage.getItem("chemicalToken")}`;
 
+            // API call with search parameter
+            const res = await fetch(
+                `${BASE_URL}api/product/displayAllProductData?search=${inputValue}`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: token,
+                    },
+                }
+            );
 
+            const data = await res.json();
+
+            // Format data for react-select
+            return data?.products?.map((product) => ({
+                value: product._id,
+                label: `${product.name_of_chemical}${product.catalog?.synonyms ? ` (${product.catalog.synonyms})` : ''
+                    }`,
+                casNumber: product.CAS_number,
+                chemicalName: product.name_of_chemical,
+                formula: product.molecularFormula
+            })) || [];
+
+        } catch (error) {
+            console.error("Error loading products:", error);
+            return [];
+        }
+    };
+    const handleProductSelectChange = (selectedOption) => {
+        if (selectedOption) {
+            setSelectedProduct(selectedOption);
+            setSelectedProductId(selectedOption.value);
+            setProductCas(selectedOption.casNumber);
+            setProductName(selectedOption.chemicalName);
+            setProductFormula(selectedOption.formula);
+        } else {
+            // setSelectedProduct(null);
+            // setSelectedProductId("");
+            // setProductCas("");
+            // setProductName("");
+            // setProductFormula("");
+            setSelectedProduct(null);
+            setSelectedProductId("");
+            setProductCas("");
+            setProductName("");
+            setProductFormula("");
+            setHsn("");
+            setQuantity("");
+            setQuantityType("");
+            setRate("");
+            setGst("");
+            setTexable("");
+        }
+    };
     // onChange evert start 
 
     const handleChange = async (e) => {
@@ -323,10 +380,10 @@ const GenerateManualPo = () => {
         let updatedFormData = {};
 
 
-        if (name === "seller_to_gst_in"){
+        if (name === "seller_to_gst_in") {
             setWrongGst(false);
-            if(value.length !== 15){
-                setFormData((prevData)=>({
+            if (value.length !== 15) {
+                setFormData((prevData) => ({
                     ...prevData,
                     seller_to_name: '',
                     seller_to_address: '',
@@ -1110,12 +1167,12 @@ const GenerateManualPo = () => {
                                                 <input onChange={handleChange} name='seller_to_gst_in' type="text" value={formData?.seller_to_gst_in} className='w-full border border-gray-300 px-2 rounded-md' /></p>
                                         </div>
                                         {wrongGst && (
-                                        <p className="text-red-500 text-sm ml-[80px]">
-                                        The GST number is incorrect.
-                                        </p>
-                                    )}
+                                            <p className="text-red-500 text-sm ml-[80px]">
+                                                The GST number is incorrect.
+                                            </p>
+                                        )}
                                     </td>
-                                    
+
 
                                     {/* po num  */}
                                     <td className='border-blue-400 border-r-[3px] font-medium ps-5 pe-4'>
@@ -1194,6 +1251,8 @@ const GenerateManualPo = () => {
                                                     <option value="15 Days Credit">Credit (15 Days)</option>
                                                     <option value="30 Days Credit">Credit (30 Days)</option>
                                                     <option value="45 Days Credit">Credit (45 Days)</option>
+                                                    <option value="60 Days Credit">Credit (60 Days)</option>
+                                                    <option value="90 Days Credit">Credit (90 Days)</option>
                                                 </select></p>
                                         </div>
                                     </td>
@@ -1295,7 +1354,7 @@ const GenerateManualPo = () => {
                                                     {countries && countries.map((e) => (
                                                         <option value={e.name}>{e.name}</option>
                                                     ))}
-                                                    
+
                                                 </select>
                                             </p>
                                         </div>
@@ -1414,12 +1473,51 @@ const GenerateManualPo = () => {
                             <div className='border-blue-400 border-[3px] my-8'>
                                 <div className='grid grid-cols-[1.5fr,0.8fr,0.8fr,0.8fr,0.8fr,1.4fr,0.7fr,0.9fr,0.8fr,0.3fr]'>
                                     <div className='py-2 px-1 border-blue-400 border-r-[3px] '>
-                                        <select value={selectedProductId} onChange={handleProductSelect} name="" id="" className='border-2 border-gray-400 py-2 outline-none rounded-md text-gray-500 text-xs  ps-3 w-full '>
-                                            <option value="IGST Amount(%)">Select Product</option>
+                                        <div className='py-1 px-1'>
+                                            <AsyncSelect
+                                                cacheOptions
+                                                loadOptions={loadProductOptions}
+                                                defaultOptions
+                                                value={selectedProduct}
+                                                onChange={handleProductSelectChange}
+                                                placeholder="Search Product"
+                                                isClearable
+                                                className="text-xs"
+                                                styles={{
+                                                    control: (base) => ({
+                                                        ...base,
+                                                        minHeight: '38px',
+                                                        fontSize: '12px',
+                                                        borderColor: '#9CA3AF',
+                                                        borderWidth: '2px',
+                                                    }),
+                                                    option: (base) => ({
+                                                        ...base,
+                                                        fontSize: '12px',
+                                                    }),
+                                                    placeholder: (base) => ({
+                                                        ...base,
+                                                        fontSize: '12px',
+                                                        color: '#6B7280',
+                                                    })
+                                                }}
+                                            />
+                                        </div>
+
+                                        {/* <select
+                                            value={selectedProductId}
+                                            onChange={handleProductSelect}
+                                            name=""
+                                            id=""
+                                            className='border-2 border-gray-400 py-2 outline-none rounded-md text-gray-500 text-xs ps-3 w-full'
+                                        >
+                                            <option value="">Select Product</option>
                                             {products && products?.map((e) => (
-                                                <option value={e?._id}>{e?.name_of_chemical}</option>
+                                                <option value={e?._id}>
+                                                    {e?.name_of_chemical} {e?.catalog?.synonyms ? `(${e.catalog.synonyms})` : ''}
+                                                </option>
                                             ))}
-                                        </select>
+                                        </select> */}
                                     </div>
                                     <div className='py-2 px-1 border-blue-400 border-r-[3px]'>
                                         <select value={category} onChange={handleCategory} name="" id="" className='border-2 border-gray-400 py-2 outline-none rounded-md text-gray-500 text-xs ps-1 w-full'>
@@ -1500,7 +1598,7 @@ const GenerateManualPo = () => {
                                         <select value={gst} onChange={handleGst} name="" id="" className='border-2 border-gray-400 py-2 outline-none rounded-md text-gray-500 text-xs  ps-1 w-full '>
                                             <option value="IGST Amount(%)">IGST Amount(%)</option>
                                             <option value="5">5%</option>
-                                            <option value="12">12%</option>
+                                            {/* <option value="12">12%</option> */}
                                             <option value="18">18%</option>
                                             <option value="28">28%</option>
                                         </select>
@@ -1862,11 +1960,11 @@ const GenerateManualPo = () => {
 
             {gstLoader && (
                 <div className=" fixed  inset-0 flex items-center justify-center bg-white bg-opacity-50 z-50">
-                <img
-                    src="https://chembizzstorage.blob.core.windows.net/chembizz-files/loader1.gif"
-                    alt="Loading..."
-                    className="w-20 h-20"
-                />
+                    <img
+                        src="https://chembizzstorage.blob.core.windows.net/chembizz-files/loader1.gif"
+                        alt="Loading..."
+                        className="w-20 h-20"
+                    />
                 </div>
             )}
         </>

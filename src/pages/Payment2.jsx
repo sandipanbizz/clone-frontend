@@ -139,6 +139,8 @@ const Payment2 = () => {
                                                                     <option value="gm">Credit (15 Days)</option>
                                                                     <option value="gm">Credit (30 Days)</option>
                                                                     <option value="gm">Credit (45 Days)</option>
+                                                                    <option value="60 Days Credit">Credit (60 Days)</option>
+                                                                    <option value="90 Days Credit">Credit (90 Days)</option>
                                                                 </select>
                                                             </div>
                                                         </div>

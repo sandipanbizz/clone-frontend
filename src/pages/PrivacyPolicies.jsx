@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import 'react-toastify/dist/ReactToastify.css';
 import { BASE_URL } from '../BASE_URL';
+import { Helmet } from "react-helmet-async";
 
 const PrivacyPolicies = () => {
 
@@ -29,6 +30,14 @@ const PrivacyPolicies = () => {
 
     return (
         <div className='my-container'>
+            <Helmet>
+  <title>Privacy Policy | Chembizz – Your Data Protection & Security</title>
+  <meta 
+    name="description" 
+    content="Read Chembizz’s Privacy Policy to understand how we collect, use, and protect your personal information. We are committed to ensuring your data privacy and security." 
+  />
+</Helmet>
+
             <div className='mx-20 py-10'>
                 <div
                     dangerouslySetInnerHTML={{

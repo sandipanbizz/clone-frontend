@@ -1269,7 +1269,7 @@ const GenerateAutomaticInvoice = () => {
                                                 disabled
                                                 value={formData?.shipped_to_pincode}
                                                 onChange={handleChange}
-                                                className='w-full border-2 border-gray-300 px-2 py-1 rounded-md' />
+                                                className='w-full border-2 border-gray-300 px-2 py-1 rounded-md'/>
                                         </p>
                                     </div>
                                 </td>
@@ -1285,6 +1285,8 @@ const GenerateAutomaticInvoice = () => {
                                                     <option value="15 Days Credit">Credit (15 Days)</option>
                                                     <option value="30 Days Credit">Credit (30 Days)</option>
                                                     <option value="45 Days Credit">Credit (45 Days)</option>
+                                                    <option value="60 Days Credit">Credit (60 Days)</option>
+                                                    <option value="90 Days Credit">Credit (90 Days)</option>
                                                 </select>
                                             </p>
                                         </div>
@@ -1661,7 +1663,7 @@ const GenerateAutomaticInvoice = () => {
                                     <select value={gst} onChange={handleGst} name="" id="" className='border-2 border-gray-400 py-2 outline-none rounded-md text-gray-500 text-xs  ps-3 w-full '>
                                         <option value="IGST Amount(%)">IGST Amount(%)</option>
                                         <option value="5">5%</option>
-                                        <option value="12">12%</option>
+                                        {/* <option value="12">12%</option> */}
                                         <option value="18">18%</option>
                                         <option value="28">28%</option>
                                     </select>

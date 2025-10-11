@@ -619,9 +619,9 @@ const Message = () => {
                         <ul className={`rounded-lg ${alreadyData.status === 'pending' ? 'bg-yellow-300' :
                           alreadyData.status === 'approved' ? 'bg-green-300' :
                             alreadyData.status === 'rejected' ? 'bg-red-500' :
-                            alreadyData.status === 'deal done' ? 'bg-green-500' :
-                              alreadyData.status === 'Expired' ? 'bg-orange-300' :
-                                'bg-red-500'
+                              alreadyData.status === 'deal done' ? 'bg-green-500' :
+                                alreadyData.status === 'Expired' ? 'bg-orange-300' :
+                                  'bg-red-500'
                           }`}>
                           <li
                             className={`text-sm font-medium py-1 px-2 `}
@@ -629,7 +629,7 @@ const Message = () => {
                             {alreadyData.status}
                           </li>
                         </ul>
-                        {alreadyData.status !== "cancel" || alreadyData.status !== 'deal done'  && (
+                        {alreadyData.status !== "cancel" || alreadyData.status !== 'deal done' && (
                           <svg
                             className="w-2.5 h-2.5 ms-3"
                             aria-hidden="true"
@@ -936,6 +936,8 @@ const Message = () => {
                             <option value="Credit (15 Days)">Credit (15 Days)</option>
                             <option value="Credit (30 Days)">Credit (30 Days)</option>
                             <option value="Credit (45 Days)">Credit (45 Days)</option>
+                            <option value="60 Days Credit">Credit (60 Days)</option>
+                            <option value="90 Days Credit">Credit (90 Days)</option>
                           </select>
                         </div>
                         <div className='w-full'>

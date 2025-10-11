@@ -4,6 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import photo from "../images/search-bg.jpg";
 import { useNavigate } from 'react-router-dom';
 import { BASE_URL } from '../BASE_URL';
+import { Helmet } from "react-helmet-async";
 
 
 const Blog = () => {
@@ -43,7 +44,16 @@ const navigate = useNavigate()
     }
 
     return (
+          
         <div className='max-w-[1350px] m-auto'>
+          <Helmet>
+  <title>Blog | Chembizz – Insights & Updates on Chemical Solutions</title>
+  <meta 
+    name="description" 
+    content="Read the latest articles, insights, and updates from Chembizz. Stay informed about industry trends, smart chemical solutions, and business growth strategies." 
+  />
+</Helmet>
+
             <div className='w-full md:py-10'>
                 <ToastContainer />
 

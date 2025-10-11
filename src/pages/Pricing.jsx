@@ -3,6 +3,7 @@ import Pricingcards from '../components/Pricingcards';
 import pricingBackground from "../images/package-heading-banner.png"
 import axios from 'axios';
 import { BASE_URL } from '../BASE_URL';
+import { Helmet } from "react-helmet-async";
 
 const Pricing = () => {
 
@@ -28,6 +29,15 @@ const Pricing = () => {
 
     return (
         <>
+       <Helmet>
+  <title>Pricing | Chembizz – Flexible Plans for Every Business</title>
+  <meta 
+    name="description" 
+    content="Explore Chembizz’s transparent and flexible pricing plans designed to meet the needs of businesses of all sizes. Compare features and choose the right plan to scale with confidence." 
+  />
+</Helmet>
+
+
             <section className='pricing-container'>
                 <div className='mt-12 mb-20 hidden sm:block'>
                     <img src={pricingBackground} alt="" className='rounded-[30px]' />

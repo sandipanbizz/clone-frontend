@@ -11,6 +11,7 @@ import { NotiContextProvider } from './context/NotificationContext.jsx'
 import { DisplayProvider } from './context/PdfViewContext.jsx'
 import { DisplayPoProvider } from './context/PoViewContext.jsx'
 import { UpdateProfileProvider } from './context/ProfileUpdateContect.jsx'
+import { DisplayCreditDebitProvider } from './context/DisplayCreditDebitContext.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -21,10 +22,12 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             <NotiContextProvider>
               <SocketContextProvider>
                 <SharedStateProvider>
+                  <DisplayCreditDebitProvider>
                   <div className='max-w-[1600px] m-auto'>
                     <App />
 
                   </div>
+                  </DisplayCreditDebitProvider>
                 </SharedStateProvider>
               </SocketContextProvider>
             </NotiContextProvider>

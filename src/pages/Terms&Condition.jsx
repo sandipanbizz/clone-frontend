@@ -10,6 +10,7 @@ import loader from "../images/loading.png"
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { BASE_URL } from '../BASE_URL'
+import { Helmet } from "react-helmet-async";
 
 const TermsCondition = () => {
 
@@ -37,6 +38,14 @@ const TermsCondition = () => {
 
     return (
         <div className='my-container'>
+         <Helmet>
+  <title>Terms & Conditions | Chembizz – Usage Policies & Guidelines</title>
+  <meta 
+    name="description" 
+    content="Review Chembizz’s Terms & Conditions to understand our policies, usage guidelines, and legal agreements for using our services and solutions." 
+  />
+</Helmet>
+
             <div className='mx-20 py-10'>
                 <div
                     dangerouslySetInnerHTML={{

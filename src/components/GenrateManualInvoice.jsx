@@ -14,6 +14,7 @@ import RupeesIcon from '../assets/Rupees';
 import loader from "../images/loading.png"
 import InvoicePdf2 from './InvoicePdf2';
 import InvoicePdf3 from './InvoicePdf3';
+import AsyncSelect from 'react-select/async';
 import { DisplayContext } from '../context/PdfViewContext';
 import { BASE_URL } from '../BASE_URL';
 
@@ -59,7 +60,7 @@ const getFormattedDate = () => {
 const GenerateManualInvoice = () => {
 
     const { display, setDisplay } = useContext(DisplayContext);
-
+    const [selectedProduct, setSelectedProduct] = useState(null);
     const [loading, setLoading] = useState(false)
 
     const { _id } = useParams()
@@ -71,8 +72,8 @@ const GenerateManualInvoice = () => {
     const [inputDiable, setInputDisable] = useState(false)
     const [buyerCompanyId, setBuyerCompanyId] = useState("")
     const [wrongGst, setWrongGst] = useState(false);
-    const [gstLoader,setGstloader]= useState(false);
-    
+    const [gstLoader, setGstloader] = useState(false);
+
 
     useEffect(() => {
         if (_id) {
@@ -275,67 +276,67 @@ const GenerateManualInvoice = () => {
     const fetchDetailsFromGst = async (gstNumber) => {
         setGstloader(true)
         try {
-          const res = await fetch(`${BASE_URL}api/gst/gstDetails/${gstNumber}`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
-    
-          const response = await res.json();
-    
-          if (response.status_cd == "0") {
-            setGstloader(false)
-            setWrongGst(true);
-          } else {
-            let resData = response.data;
-    
-            const countryName = "India";
-    
-            // Find the corresponding country object
-            const selectedCountry = countries.find(
-              (country) => country.name === countryName
-            );
-            const countryStates = selectedCountry?.states || [];
-    
-            // Find the corresponding state object
-            const selectedState = countryStates.find(
-              (state) => state.name === resData.state
-            );
-            const stateCities = selectedState?.cities || [];
-    
-            // Update form data and states
-            setStates(countryStates);
-            setCities(stateCities);
-    
-            setFormData((prevData) => ({
-              ...prevData,
-              bill_to_gst_in: gstNumber,
-              //   companyName: companyName,
-              bill_to_name: resData.companyName,
-              bill_to_address: resData.address,
-              bill_to_pincode: resData.pinCode,
-              bill_to_country: countryName,
-              bill_to_state: resData.state,
-              bill_to_city: resData.city,
-            }));
-            setGstloader(false)
-          }
-        } catch (error) {
-          console.error("Error fetching gst details:", error);
-        }
-      };
+            const res = await fetch(`${BASE_URL}api/gst/gstDetails/${gstNumber}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
 
-      useEffect(()=>{
+            const response = await res.json();
+
+            if (response.status_cd == "0") {
+                setGstloader(false)
+                setWrongGst(true);
+            } else {
+                let resData = response.data;
+
+                const countryName = "India";
+
+                // Find the corresponding country object
+                const selectedCountry = countries.find(
+                    (country) => country.name === countryName
+                );
+                const countryStates = selectedCountry?.states || [];
+
+                // Find the corresponding state object
+                const selectedState = countryStates.find(
+                    (state) => state.name === resData.state
+                );
+                const stateCities = selectedState?.cities || [];
+
+                // Update form data and states
+                setStates(countryStates);
+                setCities(stateCities);
+
+                setFormData((prevData) => ({
+                    ...prevData,
+                    bill_to_gst_in: gstNumber,
+                    //   companyName: companyName,
+                    bill_to_name: resData.companyName,
+                    bill_to_address: resData.address,
+                    bill_to_pincode: resData.pinCode,
+                    bill_to_country: countryName,
+                    bill_to_state: resData.state,
+                    bill_to_city: resData.city,
+                }));
+                setGstloader(false)
+            }
+        } catch (error) {
+            console.error("Error fetching gst details:", error);
+        }
+    };
+
+    useEffect(() => {
         const fetchGstDetails = async () => {
             if (formData.bill_to_gst_in.length === 15) {
-              await fetchDetailsFromGst(formData.bill_to_gst_in);
-              
+                await fetchDetailsFromGst(formData.bill_to_gst_in);
+
             }
-          };
-      
-          fetchGstDetails();
-    },[formData.bill_to_gst_in])
+        };
+
+        fetchGstDetails();
+    }, [formData.bill_to_gst_in])
 
 
     const handleChange = async (e) => {
@@ -343,10 +344,10 @@ const GenerateManualInvoice = () => {
         let updatedFormData = {};
 
 
-        if(name == "bill_to_gst_in"){
+        if (name == "bill_to_gst_in") {
             setWrongGst(false);
-            if(value.length !== 15){
-                setFormData((prevData)=>({
+            if (value.length !== 15) {
+                setFormData((prevData) => ({
                     ...prevData,
                     bill_to_name: '',
                     bill_to_address: '',
@@ -486,7 +487,66 @@ const GenerateManualInvoice = () => {
             due_date: newDueDate
         }));
     };
-
+    const handleProductSelectChange = (selectedOption) => {
+        if (selectedOption) {
+            setSelectedProduct(selectedOption);
+            setSelectedProductId(selectedOption.value);
+            setProductCas(selectedOption.casNumber);
+            setProductName(selectedOption.chemicalName);
+            setProductFormula(selectedOption.formula);
+        } else {
+            // setSelectedProduct(null);
+            // setSelectedProductId("");
+            // setProductCas("");
+            // setProductName("");
+            // setProductFormula("");
+            setSelectedProduct(null);
+            setSelectedProductId("");
+            setProductCas("");
+            setProductName("");
+            setProductFormula("");
+            setHsn("");
+            setQuantity("");
+            setQuantityType("");
+            setRate("");
+            setGst("");
+            setTexable("");
+        }
+    };
+     const loadProductOptions = async (inputValue) => {
+            try {
+                const token = `Bearer ${localStorage.getItem("chemicalToken")}`;
+    
+                // API call with search parameter
+                const res = await fetch(
+                    `${BASE_URL}api/product/displayAllProductData?search=${inputValue}`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: token,
+                        },
+                    }
+                );
+    
+                const data = await res.json();
+    
+                // Format data for react-select
+                return data?.products?.map((product) => ({
+                    value: product._id,
+                    label: `${product.name_of_chemical}${product.catalog?.synonyms ? ` (${product.catalog.synonyms})` : ''
+                        }`,
+                    casNumber: product.CAS_number,
+                    chemicalName: product.name_of_chemical,
+                    formula: product.molecularFormula
+                })) || [];
+    
+            } catch (error) {
+                console.error("Error loading products:", error);
+                return [];
+            }
+        };
+      
     const fetchFetailsFromPincode = async (pincode) => {
         try {
             const res = await fetch(`https://api.chembizz.in/api/public/getPincodeDetails/${pincode}`, {
@@ -907,7 +967,7 @@ const GenerateManualInvoice = () => {
 
     const fetchProducts = async () => {
         const token = `Bearer ${localStorage.getItem("chemicalToken")}`;
-        const res = await fetch(`${BASE_URL}api/product/displayAllProductWithoutToken`, {
+        const res = await fetch(`${BASE_URL}api/product/displayAllProductData`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -1217,7 +1277,7 @@ const GenerateManualInvoice = () => {
                                     </div>
                                     {wrongGst && (
                                         <p className="text-red-500 text-sm ml-[80px]">
-                                        The GST number is incorrect.
+                                            The GST number is incorrect.
                                         </p>
                                     )}
                                 </th>
@@ -1390,6 +1450,8 @@ const GenerateManualInvoice = () => {
                                                 <option value="15 Days Credit">Credit (15 Days)</option>
                                                 <option value="30 Days Credit">Credit (30 Days)</option>
                                                 <option value="45 Days Credit">Credit (45 Days)</option>
+                                                <option value="60 Days Credit">Credit (60 Days)</option>
+                                                <option value="90 Days Credit">Credit (90 Days)</option>
                                             </select>
                                         </p>
                                     </div>
@@ -1706,12 +1768,43 @@ const GenerateManualInvoice = () => {
                     <div className='border-blue-400 border-[3px] my-8'>
                         <div className='grid grid-cols-[3fr,1fr,1.4fr,1fr,1.2fr,2fr,1fr]'>
                             <div className='py-3 px-3 border-blue-400 border-r-[3px] '>
-                                <select value={selectedProductId} onChange={handleProductSelect} name="" id="" className='border-2 border-gray-400 py-2 outline-none rounded-md text-gray-500 text-xs  ps-3 w-full '>
+                                <div className='py-1 px-1'>
+                                    <AsyncSelect
+                                        cacheOptions
+                                        loadOptions={loadProductOptions}
+                                        defaultOptions
+                                        value={selectedProduct}
+                                        onChange={handleProductSelectChange}
+                                        placeholder="Search Product"
+                                        isClearable
+                                        className="text-xs"
+                                        styles={{
+                                            control: (base) => ({
+                                                ...base,
+                                                minHeight: '38px',
+                                                fontSize: '12px',
+                                                borderColor: '#9CA3AF',
+                                                borderWidth: '2px',
+                                            }),
+                                            option: (base) => ({
+                                                ...base,
+                                                fontSize: '12px',
+                                            }),
+                                            placeholder: (base) => ({
+                                                ...base,
+                                                fontSize: '12px',
+                                                color: '#6B7280',
+                                            })
+                                        }}
+                                    />
+                                </div>
+
+                                {/* <select value={selectedProductId} onChange={handleProductSelect} name="" id="" className='border-2 border-gray-400 py-2 outline-none rounded-md text-gray-500 text-xs  ps-3 w-full '>
                                     <option value="IGST Amount(%)">Select Product</option>
                                     {products && products?.map((e) => (
                                         <option value={e?._id}>{e?.name_of_chemical}</option>
                                     ))}
-                                </select>
+                                </select> */}
                             </div>
                             <div className='py-3 px-3 border-blue-400 border-r-[3px]'>
                                 <input
@@ -1769,7 +1862,7 @@ const GenerateManualInvoice = () => {
                                 <select value={gst} onChange={handleGst} name="" id="" className='border-2 border-gray-400 py-2 outline-none rounded-md text-gray-500 text-xs  ps-3 w-full '>
                                     <option value="IGST Amount(%)">IGST Amount(%)</option>
                                     <option value="5">5%</option>
-                                    <option value="12">12%</option>
+                                    {/* <option value="12">12%</option> */}
                                     <option value="18">18%</option>
                                     <option value="28">28%</option>
                                 </select>
@@ -2175,11 +2268,11 @@ const GenerateManualInvoice = () => {
 
             {gstLoader && (
                 <div className=" fixed  inset-0 flex items-center justify-center bg-white bg-opacity-50 z-50">
-                <img
-                    src="https://chembizzstorage.blob.core.windows.net/chembizz-files/loader1.gif"
-                    alt="Loading..."
-                    className="w-20 h-20"
-                />
+                    <img
+                        src="https://chembizzstorage.blob.core.windows.net/chembizz-files/loader1.gif"
+                        alt="Loading..."
+                        className="w-20 h-20"
+                    />
                 </div>
             )}
         </>

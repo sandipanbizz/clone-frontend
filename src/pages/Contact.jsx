@@ -7,6 +7,7 @@ import countries from "./CountryStateCity.json";
 import loader from "../images/loading.png"
 import axios from 'axios';
 import { BASE_URL } from '../BASE_URL';
+import { Helmet } from "react-helmet-async";
 
 const Contact = () => {
 
@@ -149,6 +150,14 @@ const Contact = () => {
 
   return (
     <div className='contact-container'>
+ <Helmet>
+  <title>Contact Us | Chembizz – Get in Touch with Our Team</title>
+  <meta 
+    name="description" 
+    content="Reach out to Chembizz for inquiries, support, or partnership opportunities. Our team is here to assist you with smart chemical solutions and help your business grow." 
+  />
+</Helmet>
+
       <div className='w-full md:p-10'>
 
         <ToastContainer />
@@ -211,7 +220,8 @@ const Contact = () => {
             </div>
           </div>
           <div className="flex-1 sm:p-8 p-0 mt-10">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3669.543897911318!2d72.62590417458416!3d23.11378657910986!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e84604595e899%3A0x3e7418c1b4e56140!2sWebEarl%20Technologies%20Private%20Limited!5e0!3m2!1sen!2sin!4v1708591679124!5m2!1sen!2sin" className='md:h-[400px] md:w-[500px] sm:w-[350px] sm:h-[300px] w-[300px] h-[100%]' style={{ border: 0 }} allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          {/* <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3669.543897911318!2d72.62590417458416!3d23.11378657910986!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e84604595e899%3A0x3e7418c1b4e56140!2sWebEarl%20Technologies%20Private%20Limited!5e0!3m2!1sen!2sin!4v1708591679124!5m2!1sen!2sin" className='md:h-[400px] md:w-[500px] sm:w-[350px] sm:h-[300px] w-[300px] h-[100%]' style={{ border: 0 }} allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe> */}
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d235004.92779754256!2d72.4014540180179!3d23.025534685588845!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e8513b8ed603d%3A0x984339783b461674!2sAnbizZ%20E%20Technologies!5e0!3m2!1sen!2sin!4v1757586344125!5m2!1sen!2sin"className='md:h-[400px] md:w-[500px] sm:w-[350px] sm:h-[300px] w-[300px] h-[100%]' style={{ border: 0 }} allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
             <div className='mt-8'>
               <div className='grid md:grid-cols-2 gap-6  grid-cols-1 mt-14'>
                 <div className='flex  items-start   gap-6'>

@@ -52,7 +52,7 @@ const formatDate = (dateString) => {
 };
 
 
-const Invoice1 = ({ data }) => {
+const Invoice1 = ({ data , returnRequestdata}) => {
 
     // console.log(data)
     const location = useLocation();
@@ -64,7 +64,7 @@ const Invoice1 = ({ data }) => {
     const [userPost, setUserPost] = useState("")
 
     const { setDisplayPo } = useContext(DisplayPoContext);
-
+ 
     useEffect(() => {
 
         if (data?.buyer_company_id === companyId) {

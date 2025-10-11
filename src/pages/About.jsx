@@ -10,6 +10,7 @@ import loader from "../images/loading.png"
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { BASE_URL } from '../BASE_URL'
+import { Helmet } from "react-helmet-async";
 
 const Data = [
   {
@@ -167,8 +168,11 @@ const About = () => {
 
   return (
     <div className='my-container'>
+        <Helmet>
+        <title>About Us | Chembizz – Empowering Businesses with Smart Chemical Solutions</title>
+       <meta name="description" content="Discover Chembizz’s mission, values, and commitment to transforming the chemical industry with innovative solutions. Learn about our journey, expertise, and dedication to helping businesses grow." />
+      </Helmet>
       <div className='md:px-20 bg-gray-100'>
-
         {/* Hero Section */}
         <div className='w-full sm:px-10 pt-14 px-5 mb-16'>
           <div className='flex md:flex-row flex-col items-center justify-between'>
