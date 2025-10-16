@@ -2001,8 +2001,8 @@ const Buying_inquiry_detail = () => {
                                     <React.Fragment key={index}>
                                       <tr
                                         className={`flex py-2 ${index % 2 === 0
-                                            ? "bg-white"
-                                            : "bg-gray-100"
+                                          ? "bg-white"
+                                          : "bg-gray-100"
                                           }`}
                                       >
                                         <td className="text-center py-2 flex flex-col sm:justify-center justify-start font-semibold w-[7%]">
@@ -2322,9 +2322,7 @@ const Buying_inquiry_detail = () => {
                             {/* Return Status Flow */}
                             <div className="mt-4">
                               <div className="flex justify-between items-center mb-3">
-                                <p className="text-sm font-medium">
-                                  Return Status Flow
-                                </p>
+                                <p className="text-sm font-medium">Return Status Flow</p>
                                 <button
                                   onClick={() => {
                                     if (selectedReturnRequest === request._id) {
@@ -2335,9 +2333,7 @@ const Buying_inquiry_detail = () => {
                                   }}
                                   className="text-xs text-blue-600 hover:text-blue-800 font-medium"
                                 >
-                                  {selectedReturnRequest === request._id
-                                    ? "Hide Details"
-                                    : "View Status Flow"}
+                                  {selectedReturnRequest === request._id ? "Hide Details" : "View Status Flow"}
                                 </button>
                               </div>
 
@@ -2346,24 +2342,16 @@ const Buying_inquiry_detail = () => {
                                   <div className="relative mb-6">
                                     {/* Progress Line */}
                                     <div
-                                      className={`absolute ${isRejectedFlow
-                                          ? "mr-[120px] ml-[120px]"
-                                          : "mr-[45px] ml-[45px]"
-                                        } left-0 right-0 top-5 h-1 bg-gray-300 z-0`}
+                                      className={`absolute ${isRejectedFlow ? "mr-[120px] ml-[120px]" : "mr-[45px] ml-[45px]"} left-0 right-0 top-5 h-1 bg-gray-300 z-0`}
                                     >
                                       <div
-                                        className={`h-full transition-all duration-500 ${isRejectedFlow
-                                            ? "bg-red-500"
-                                            : "bg-[#09BB44]"
-                                          }`}
+                                        className={`h-full transition-all duration-500 ${isRejectedFlow ? "bg-red-500" : ""}`}
                                         style={{
-                                          width: `${isCompletedStatus ||
-                                              request.status === "rejected"
+                                          // ✅ Return flow primary color (blue) instead of green
+                                          backgroundColor: !isRejectedFlow ? "#007BCE" : undefined,
+                                          width: `${isCompletedStatus || request.status === "rejected"
                                               ? 100
-                                              : (currentReturnStatusIndex /
-                                                (currentFlowStatuses.length -
-                                                  1)) *
-                                              100
+                                              : (currentReturnStatusIndex / (currentFlowStatuses.length - 1)) * 100
                                             }%`,
                                         }}
                                       ></div>
@@ -2371,59 +2359,44 @@ const Buying_inquiry_detail = () => {
 
                                     {/* Status Items */}
                                     <div className="flex justify-between relative">
-                                      {currentFlowStatuses.map(
-                                        (status, index) => {
-                                          const isCompleted =
-                                            isCompletedStatus ||
-                                            request.status === "rejected" ||
-                                            index <= currentReturnStatusIndex;
+                                      {currentFlowStatuses.map((status, index) => {
+                                        const isCompleted =
+                                          isCompletedStatus ||
+                                          request.status === "rejected" ||
+                                          index <= currentReturnStatusIndex;
 
-                                          return (
+                                        const isRejectedPoint = isRejectedFlow && status === "rejected";
+
+                                        return (
+                                          <div key={index} className="text-center relative z-10 flex-1">
+                                            {/* Status Icon */}
                                             <div
-                                              key={index}
-                                              className="text-center relative z-10 flex-1"
+                                              className={`mx-auto w-10 h-10 rounded-full flex items-center justify-center ${isCompleted ? "" : "bg-gray-400"
+                                                }`}
+                                              style={{
+                                                // ✅ Use blue for completed steps (except the rejected step which stays red)
+                                                backgroundColor: isCompleted && !isRejectedPoint ? "#007BCE" : undefined,
+                                              }}
                                             >
-                                              {/* Status Icon */}
-                                              <div
-                                                className={`mx-auto w-10 h-10 rounded-full flex items-center justify-center ${isCompleted
-                                                    ? isRejectedFlow &&
-                                                      status === "rejected"
-                                                      ? "bg-red-500"
-                                                      : "bg-[#09BB44]"
-                                                    : "bg-gray-400"
-                                                  }`}
-                                              >
-                                                <img
-                                                  src={getReturnStatusImage(
-                                                    status
-                                                  )}
-                                                  alt=""
-                                                  className="w-6 h-6"
-                                                />
-                                              </div>
-
-                                              {/* Status Label */}
-                                              <p className="text-xs font-medium mt-2 text-center whitespace-nowrap">
-                                                {formatReturnStatus(status)}
-                                              </p>
-
-                                              {/* Status Date */}
-                                              {returnStatusHistory.find(
-                                                (item) => item.status === status
-                                              ) && (
-                                                  <p className="text-[10px] text-gray-500 mt-1 text-center">
-                                                    {formatDate(
-                                                      returnStatusHistory.find(
-                                                        (item) =>
-                                                          item.status === status
-                                                      )?.dateAndTime
-                                                    ) || ""}
-                                                  </p>
-                                                )}
+                                              <img src={getReturnStatusImage(status)} alt="" className="w-5 h-5 filter brightness-0 invert" />
                                             </div>
-                                          );
-                                        }
-                                      )}
+
+                                            {/* Status Label */}
+                                            <p className="text-xs font-medium mt-2 text-center whitespace-nowrap">
+                                              {formatReturnStatus(status)}
+                                            </p>
+
+                                            {/* Status Date */}
+                                            {returnStatusHistory.find((item) => item.status === status) && (
+                                              <p className="text-[10px] text-gray-500 mt-1 text-center">
+                                                {formatDate(
+                                                  returnStatusHistory.find((item) => item.status === status)?.dateAndTime
+                                                ) || ""}
+                                              </p>
+                                            )}
+                                          </div>
+                                        );
+                                      })}
                                     </div>
                                   </div>
 
@@ -2439,15 +2412,14 @@ const Buying_inquiry_detail = () => {
                                               : "text-blue-600"
                                           }`}
                                       >
-                                        {formatReturnStatus(
-                                          request.status
-                                        ).toUpperCase()}
+                                        {formatReturnStatus(request.status).toUpperCase()}
                                       </span>
                                     </p>
                                   </div>
                                 </div>
                               )}
                             </div>
+
                           </div>
                         );
                       })}
@@ -2500,28 +2472,28 @@ const Buying_inquiry_detail = () => {
                         >
                           <ul
                             className={`rounded-lg text-white ${inquiryStatus === "pending"
-                                ? "bg-yellow-500"
-                                : inquiryStatus === "approved"
-                                  ? "bg-blue-500"
-                                  : inquiryStatus === "rejected"
-                                    ? "bg-red-500"
-                                    : inquiryStatus === "cancel"
-                                      ? "bg-gray-500"
-                                      : inquiryStatus === "negotiation"
-                                        ? "bg-orange-500"
-                                        : inquiryStatus === "po"
-                                          ? "bg-purple-500"
-                                          : inquiryStatus === "invoice"
-                                            ? "bg-teal-500"
-                                            : inquiryStatus === "dispatch"
-                                              ? "bg-indigo-500"
-                                              : inquiryStatus === "in transit"
-                                                ? "bg-pink-500"
-                                                : inquiryStatus === "delivered"
-                                                  ? "bg-green-500"
-                                                  : inquiryStatus === "deal done"
-                                                    ? "bg-orange-300"
-                                                    : "bg-red-500"
+                              ? "bg-yellow-500"
+                              : inquiryStatus === "approved"
+                                ? "bg-blue-500"
+                                : inquiryStatus === "rejected"
+                                  ? "bg-red-500"
+                                  : inquiryStatus === "cancel"
+                                    ? "bg-gray-500"
+                                    : inquiryStatus === "negotiation"
+                                      ? "bg-orange-500"
+                                      : inquiryStatus === "po"
+                                        ? "bg-purple-500"
+                                        : inquiryStatus === "invoice"
+                                          ? "bg-teal-500"
+                                          : inquiryStatus === "dispatch"
+                                            ? "bg-indigo-500"
+                                            : inquiryStatus === "in transit"
+                                              ? "bg-pink-500"
+                                              : inquiryStatus === "delivered"
+                                                ? "bg-green-500"
+                                                : inquiryStatus === "deal done"
+                                                  ? "bg-orange-300"
+                                                  : "bg-red-500"
                               }`}
                           >
                             <li className={`text-sm font-medium py-1 px-2 `}>
@@ -2572,8 +2544,8 @@ const Buying_inquiry_detail = () => {
                                     inquiryStatus === "pending" && (
                                       <p
                                         className={`text-sm font-medium py-1 ps-2 cursor-pointer rounded ${selectedStatus === "approved"
-                                            ? "bg-darkBlue text-white font-semibold"
-                                            : ""
+                                          ? "bg-darkBlue text-white font-semibold"
+                                          : ""
                                           }`}
                                         onClick={() =>
                                           handleStatusSelection("approved")
@@ -2588,8 +2560,8 @@ const Buying_inquiry_detail = () => {
                                       inquiryStatus === "negotiation") && (
                                       <p
                                         className={`text-sm font-medium py-1 ps-2 cursor-pointer rounded ${selectedStatus === "rejected"
-                                            ? "bg-darkBlue text-white font-semibold"
-                                            : ""
+                                          ? "bg-darkBlue text-white font-semibold"
+                                          : ""
                                           }`}
                                         onClick={() =>
                                           handleStatusSelection("rejected")
@@ -2605,8 +2577,8 @@ const Buying_inquiry_detail = () => {
                                         {userPost === "buyer" && (
                                           <p
                                             className={`text-sm font-medium py-1 ps-2 cursor-pointer rounded ${selectedStatus === "cancel"
-                                                ? "bg-darkBlue text-white font-semibold"
-                                                : ""
+                                              ? "bg-darkBlue text-white font-semibold"
+                                              : ""
                                               }`}
                                             onClick={() =>
                                               handleStatusSelection("cancel")
@@ -2859,28 +2831,28 @@ const Buying_inquiry_detail = () => {
                           >
                             <ul
                               className={`rounded-lg text-white ${inquiryStatus === "pending"
-                                  ? "bg-yellow-500"
-                                  : inquiryStatus === "approved"
-                                    ? "bg-blue-500"
-                                    : inquiryStatus === "rejected"
-                                      ? "bg-red-500"
-                                      : inquiryStatus === "cancel"
-                                        ? "bg-gray-500"
-                                        : inquiryStatus === "negotiation"
-                                          ? "bg-orange-500"
-                                          : inquiryStatus === "po"
-                                            ? "bg-purple-500"
-                                            : inquiryStatus === "invoice"
-                                              ? "bg-teal-500"
-                                              : inquiryStatus === "dispatch"
-                                                ? "bg-indigo-500"
-                                                : inquiryStatus === "in transit"
-                                                  ? "bg-pink-500"
-                                                  : inquiryStatus === "delivered"
-                                                    ? "bg-green-500"
-                                                    : inquiryStatus === "deal done"
-                                                      ? "bg-orange-300"
-                                                      : "bg-red-500"
+                                ? "bg-yellow-500"
+                                : inquiryStatus === "approved"
+                                  ? "bg-blue-500"
+                                  : inquiryStatus === "rejected"
+                                    ? "bg-red-500"
+                                    : inquiryStatus === "cancel"
+                                      ? "bg-gray-500"
+                                      : inquiryStatus === "negotiation"
+                                        ? "bg-orange-500"
+                                        : inquiryStatus === "po"
+                                          ? "bg-purple-500"
+                                          : inquiryStatus === "invoice"
+                                            ? "bg-teal-500"
+                                            : inquiryStatus === "dispatch"
+                                              ? "bg-indigo-500"
+                                              : inquiryStatus === "in transit"
+                                                ? "bg-pink-500"
+                                                : inquiryStatus === "delivered"
+                                                  ? "bg-green-500"
+                                                  : inquiryStatus === "deal done"
+                                                    ? "bg-orange-300"
+                                                    : "bg-red-500"
                                 }`}
                             >
                               <li className={`text-sm font-medium py-1 px-2 `}>
@@ -2928,8 +2900,8 @@ const Buying_inquiry_detail = () => {
                                       inquiryStatus === "pending" && (
                                         <p
                                           className={`text-sm font-medium py-1 ps-2 cursor-pointer rounded ${selectedStatus === "approved"
-                                              ? "bg-darkBlue text-white font-semibold"
-                                              : ""
+                                            ? "bg-darkBlue text-white font-semibold"
+                                            : ""
                                             }`}
                                           onClick={() =>
                                             handleStatusSelection("approved")
@@ -2944,8 +2916,8 @@ const Buying_inquiry_detail = () => {
                                         inquiryStatus === "negotiation") && (
                                         <p
                                           className={`text-sm font-medium py-1 ps-2 cursor-pointer rounded ${selectedStatus === "rejected"
-                                              ? "bg-darkBlue text-white font-semibold"
-                                              : ""
+                                            ? "bg-darkBlue text-white font-semibold"
+                                            : ""
                                             }`}
                                           onClick={() =>
                                             handleStatusSelection("rejected")
@@ -2961,8 +2933,8 @@ const Buying_inquiry_detail = () => {
                                           {userPost === "buyer" && (
                                             <p
                                               className={`text-sm font-medium py-1 ps-2 cursor-pointer rounded ${selectedStatus === "cancel"
-                                                  ? "bg-darkBlue text-white font-semibold"
-                                                  : ""
+                                                ? "bg-darkBlue text-white font-semibold"
+                                                : ""
                                                 }`}
                                               onClick={() =>
                                                 handleStatusSelection("cancel")
@@ -3184,8 +3156,7 @@ const Buying_inquiry_detail = () => {
                               Reason: {request.reason}
                             </p>
                             <p className="text-xs text-gray-500 mt-1">
-                              Total Amount: ₹{request.total_return_amount} |
-                              Quantity: {request.total_return_qty}{" "}
+                              Total Amount: ₹{request.total_return_amount} | Quantity: {request.total_return_qty}{" "}
                               {request.qty_type}
                             </p>
                           </div>
@@ -3208,8 +3179,7 @@ const Buying_inquiry_detail = () => {
                               key={index}
                               className="text-xs text-gray-600 border-b border-gray-100 pb-1 mb-1"
                             >
-                              {product.chem_name} - {product.qty}{" "}
-                              {product.qty_type} @ ₹{product.rate}
+                              {product.chem_name} - {product.qty} {product.qty_type} @ ₹{product.rate}
                             </div>
                           ))}
                         </div>
@@ -3222,18 +3192,11 @@ const Buying_inquiry_detail = () => {
                               {/* Seller: pending → under_review */}
                               {request.status === "pending" && (
                                 <button
-                                  onClick={() =>
-                                    updateReturnStatus(
-                                      request._id,
-                                      "under_review"
-                                    )
-                                  }
+                                  onClick={() => updateReturnStatus(request._id, "under_review")}
                                   disabled={loadingReturnStatus}
                                   className="bg-blue-500 text-white px-3 py-1 rounded text-xs hover:bg-blue-600 disabled:opacity-50 transition-colors"
                                 >
-                                  {loadingReturnStatus
-                                    ? "Processing..."
-                                    : "Review Return"}
+                                  {loadingReturnStatus ? "Processing..." : "Review Return"}
                                 </button>
                               )}
 
@@ -3241,140 +3204,70 @@ const Buying_inquiry_detail = () => {
                               {request.status === "under_review" && (
                                 <>
                                   <button
-                                    onClick={() =>
-                                      updateReturnStatus(
-                                        request._id,
-                                        "approved"
-                                      )
-                                    }
+                                    onClick={() => updateReturnStatus(request._id, "approved")}
                                     disabled={loadingReturnStatus}
                                     className="bg-green-500 text-white px-3 py-1 rounded text-xs hover:bg-green-600 disabled:opacity-50 transition-colors"
                                   >
-                                    {loadingReturnStatus
-                                      ? "Processing..."
-                                      : "Approve Return"}
+                                    {loadingReturnStatus ? "Processing..." : "Approve Return"}
                                   </button>
                                   <button
-                                    onClick={() =>
-                                      updateReturnStatus(
-                                        request._id,
-                                        "rejected"
-                                      )
-                                    }
+                                    onClick={() => updateReturnStatus(request._id, "rejected")}
                                     disabled={loadingReturnStatus}
                                     className="bg-red-500 text-white px-3 py-1 rounded text-xs hover:bg-red-600 disabled:opacity-50 transition-colors"
                                   >
-                                    {loadingReturnStatus
-                                      ? "Processing..."
-                                      : "Reject Return"}
+                                    {loadingReturnStatus ? "Processing..." : "Reject Return"}
                                   </button>
                                 </>
                               )}
 
-                              {/* ✅ NEW: Seller: approved → dispatch */}
-                              {request.status === "approved" && (
-                                <button
-                                  onClick={() =>
-                                    updateReturnStatus(request._id, "dispatch")
-                                  }
-                                  disabled={loadingReturnStatus}
-                                  className="bg-teal-500 text-white px-3 py-1 rounded text-xs hover:bg-teal-600 disabled:opacity-50 transition-colors"
-                                >
-                                  {loadingReturnStatus
-                                    ? "Processing..."
-                                    : "Dispatch Return"}
-                                </button>
-                              )}
+                              {/* 🔁 REMOVED: Seller approved → dispatch (now buyer does this) */}
 
                               {/* Seller: in_transit → received */}
                               {request.status === "in_transit" && (
                                 <button
-                                  onClick={() =>
-                                    updateReturnStatus(request._id, "received")
-                                  }
+                                  onClick={() => updateReturnStatus(request._id, "received")}
                                   disabled={loadingReturnStatus}
                                   className="bg-purple-500 text-white px-3 py-1 rounded text-xs hover:bg-purple-600 disabled:opacity-50 transition-colors"
                                 >
-                                  {loadingReturnStatus
-                                    ? "Processing..."
-                                    : "Mark Received"}
+                                  {loadingReturnStatus ? "Processing..." : "Mark Received"}
                                 </button>
                               )}
 
-                              {/* Seller: received → Multiple refund status options */}
+                              {/* Seller: received → Refund/closure statuses */}
                               {request.status === "received" && (
                                 <div className="flex items-center gap-2">
                                   <select
                                     className="text-xs font-medium border border-gray-400 rounded px-2 py-1.5 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                                     value={manualStatuses[request._id] || ""}
-                                    onChange={(e) =>
-                                      handleStatusChange(
-                                        request._id,
-                                        e.target.value
-                                      )
-                                    }
+                                    onChange={(e) => handleStatusChange(request._id, e.target.value)}
                                   >
                                     <option value="" className="text-gray-500">
                                       -- Select Refund Status --
                                     </option>
-                                    <option value="refund_processed">
-                                      Refund Processed Successfully
-                                    </option>
-                                    <option value="credit_note_issued">
-                                      Credit Note Issued
-                                    </option>
-                                    <option value="debit_note_issued">
-                                      Debit Note Issued
-                                    </option>
-                                    <option value="amount_adjusted">
-                                      Amount Adjusted in Account
-                                    </option>
-                                    <option value="product_replaced">
-                                      Product Replaced Successfully
-                                    </option>
-                                    <option value="quality_issue_resolved">
-                                      Quality Issue Resolved
-                                    </option>
-                                    <option value="payment_settled">
-                                      Payment Settled
-                                    </option>
-                                    <option value="partial_refund_issued">
-                                      Partial Refund Issued
-                                    </option>
-                                    <option value="full_refund_issued">
-                                      Full Refund Issued
-                                    </option>
-                                    <option value="dispute_resolved">
-                                      Dispute Resolved
-                                    </option>
-                                    <option value="pending_verification">
-                                      Pending Verification
-                                    </option>
-                                    <option value="under_review">
-                                      Under Review
-                                    </option>
-                                    <option value="completed">
-                                      Return Process Completed
-                                    </option>
+                                    <option value="refund_processed">Refund Processed Successfully</option>
+                                    <option value="credit_note_issued">Credit Note Issued</option>
+                                    <option value="debit_note_issued">Debit Note Issued</option>
+                                    <option value="amount_adjusted">Amount Adjusted in Account</option>
+                                    <option value="product_replaced">Product Replaced Successfully</option>
+                                    <option value="quality_issue_resolved">Quality Issue Resolved</option>
+                                    <option value="payment_settled">Payment Settled</option>
+                                    <option value="partial_refund_issued">Partial Refund Issued</option>
+                                    <option value="full_refund_issued">Full Refund Issued</option>
+                                    <option value="dispute_resolved">Dispute Resolved</option>
+                                    <option value="pending_verification">Pending Verification</option>
+                                    <option value="under_review">Under Review</option>
+                                    <option value="completed">Return Process Completed</option>
                                   </select>
 
                                   <button
                                     onClick={() =>
                                       manualStatuses[request._id] &&
-                                      updateReturnStatus(
-                                        request._id,
-                                        manualStatuses[request._id]
-                                      )
+                                      updateReturnStatus(request._id, manualStatuses[request._id])
                                     }
-                                    disabled={
-                                      loadingReturnStatus ||
-                                      !manualStatuses[request._id]
-                                    }
+                                    disabled={loadingReturnStatus || !manualStatuses[request._id]}
                                     className="bg-green-600 text-white px-3 py-1.5 rounded text-xs hover:bg-green-700 disabled:opacity-50 transition-colors"
                                   >
-                                    {loadingReturnStatus
-                                      ? "Processing..."
-                                      : "Update Status"}
+                                    {loadingReturnStatus ? "Processing..." : "Update Status"}
                                   </button>
                                 </div>
                               )}
@@ -3384,21 +3277,25 @@ const Buying_inquiry_detail = () => {
                           {/* BUYER ACTIONS */}
                           {userPost === "buyer" && (
                             <>
-                              {/* ✅ UPDATED: Buyer: dispatch → in_transit */}
+                              {/* ✅ Buyer: approved → dispatch */}
+                              {request.status === "approved" && (
+                                <button
+                                  onClick={() => updateReturnStatus(request._id, "dispatch")}
+                                  disabled={loadingReturnStatus}
+                                  className="bg-teal-500 text-white px-3 py-1 rounded text-xs hover:bg-teal-600 disabled:opacity-50 transition-colors"
+                                >
+                                  {loadingReturnStatus ? "Processing..." : "Dispatch Return"}
+                                </button>
+                              )}
+
+                              {/* Buyer: dispatch → in_transit */}
                               {request.status === "dispatch" && (
                                 <button
-                                  onClick={() =>
-                                    updateReturnStatus(
-                                      request._id,
-                                      "in_transit"
-                                    )
-                                  }
+                                  onClick={() => updateReturnStatus(request._id, "in_transit")}
                                   disabled={loadingReturnStatus}
                                   className="bg-orange-500 text-white px-3 py-1 rounded text-xs hover:bg-orange-600 disabled:opacity-50 transition-colors"
                                 >
-                                  {loadingReturnStatus
-                                    ? "Processing..."
-                                    : "Mark In Transit"}
+                                  {loadingReturnStatus ? "Processing..." : "Mark In Transit"}
                                 </button>
                               )}
                             </>
@@ -3409,10 +3306,7 @@ const Buying_inquiry_detail = () => {
                             request.status === "refund_successful" ||
                             manualStatuses[request._id]) && (
                               <span className="text-xs text-gray-500 italic">
-                                Return process{" "}
-                                {request.status === "rejected"
-                                  ? "rejected"
-                                  : "completed successfully"}
+                                Return process {request.status === "rejected" ? "rejected" : "completed successfully"}
                               </span>
                             )}
                         </div>
@@ -3428,6 +3322,7 @@ const Buying_inquiry_detail = () => {
                     ))}
                   </div>
                 )}
+
                 {finalPaymentDetails && location.state !== "returnOrder" && (
                   <div className="border border-[#0A122A]/0.1 rounded-2xl shadow pt-3 pb-7 mt-5 px-5 mb-5">
                     <h1 className="text-xl font-medium mb-2">
@@ -3478,16 +3373,16 @@ const Buying_inquiry_detail = () => {
                     <div className="text-end mt-5">
                       <span
                         className={`rounded-lg text-md font-semibold py-1 px-2 ${negotiationStatus === "pending"
-                            ? "bg-yellow-300"
-                            : negotiationStatus === "approved"
-                              ? "bg-green-300"
-                              : negotiationStatus === "deal done"
-                                ? "bg-green-500"
-                                : negotiationStatus === "rejected"
-                                  ? "bg-red-500"
-                                  : negotiationStatus === "Expired"
-                                    ? "bg-orange-300"
-                                    : "bg-red-500"
+                          ? "bg-yellow-300"
+                          : negotiationStatus === "approved"
+                            ? "bg-green-300"
+                            : negotiationStatus === "deal done"
+                              ? "bg-green-500"
+                              : negotiationStatus === "rejected"
+                                ? "bg-red-500"
+                                : negotiationStatus === "Expired"
+                                  ? "bg-orange-300"
+                                  : "bg-red-500"
                           }`}
                       >
                         {capitalizeFirstLetter(negotiationStatus)}
