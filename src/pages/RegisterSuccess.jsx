@@ -11,7 +11,7 @@ const RegisterSuccess = () => {
       {/* ✅ Background Image */}
       <div className="absolute inset-0 -z-0">
         <img
-          src="src/assets/loginBg.svg"  
+          src="src/images/loginBg.png"  
           alt="background"
           className="w-full h-full object-cover border border-[#0077B3]"
         />
@@ -23,7 +23,7 @@ const RegisterSuccess = () => {
           {/* LEFT: Text Section */}
           <div className="order-2 lg:order-1 flex flex-col items-center lg:items-start text-center lg:text-left font-[Poppins]">
             <img
-              src="src/assets/chembizzlogo.png"
+              src="src/images/chembizzlogo.png"
               alt="ChemBizz Logo"
               className="w-[220px] md:w-[280px] xl:w-[301px] h-auto object-contain mb-6"
             />
@@ -74,7 +74,7 @@ const RegisterSuccess = () => {
             >
               <div className="mx-auto mb-8">
                 <img
-                  src="src/assets/anbizzLogo.png"
+                  src="src/images/anbizzLogo.png"
                   alt="ChemBizz Logo"
                   className="w-[120px] mx-auto"
                 />

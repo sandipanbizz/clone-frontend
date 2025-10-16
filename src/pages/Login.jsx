@@ -195,7 +195,7 @@ const Login = () => {
       {/* ✅ Background Image */}
       <div className="absolute inset-0 z-0">
         <img
-          src="src/assets/loginBg.svg"
+          src="src/images/loginBg.png"
           alt="background"
           className="w-full h-full object-cover"
         />
@@ -208,7 +208,7 @@ const Login = () => {
           {/* LEFT: Logo + Text */}
           <div className="order-2 lg:order-1 flex flex-col justify-center lg:items-start items-center text-center lg:text-left space-y-5">
             <img
-              src="src/assets/chembizzlogo.png"
+              src="src/images/chembizzlogo.png"
               alt="ChemBizz Logo"
               className="w-[250px] md:w-[300px] h-auto object-contain rounded-2xl"
             />

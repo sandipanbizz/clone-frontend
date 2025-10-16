@@ -103,7 +103,7 @@ return (
     {/* Background Image */}
     <div className="absolute inset-0 -z-0">
       <img
-        src="src/assets/loginBg.svg"
+        src="src/images/loginBg.png"
         alt="background"
         className="w-full h-full object-cover"
       />
@@ -136,7 +136,7 @@ return (
        <div className="order-2 lg:order-1 text-center lg:text-left flex flex-col items-center lg:items-start">
   {/* Logo */}
   <img
-    src="src/assets/chembizzlogo.png"
+    src="src/images/chembizzlogo.png"
     alt="ChemBizz Logo"
     className="w-[220px] md:w-[280px] xl:w-[301px] h-auto object-contain mb-6"
   />

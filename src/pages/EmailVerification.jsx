@@ -62,7 +62,7 @@ const EmailVerifySuccess = () => {
       {/* Background image */}
       <div className="absolute inset-0 -z-0">
         <img
-          src="src/assets/loginBg.svg"            /* make sure this file is in /public/assets */
+          src="src/images/loginBg.png"            /* make sure this file is in /public/assets */
           alt="background"
           className="w-full h-full object-cover"
         />
@@ -74,7 +74,7 @@ const EmailVerifySuccess = () => {
           {/* LEFT: brand/info text */}
           <div className="order-2 lg:order-1 flex flex-col items-center lg:items-start text-center lg:text-left font-[Poppins]">
             <img
-              src="src/assets/chembizzlogo.png"   /* place in /public/assets */
+              src="src/images/chembizzlogo.png"   /* place in /public/assets */
               alt="ChemBizz Logo"
               className="w-[220px] md:w-[280px] xl:w-[301px] h-auto object-contain mb-6"
             />
@@ -122,7 +122,7 @@ const EmailVerifySuccess = () => {
                 {loading ? (
                   <div className="animate-spin mx-auto h-14 w-14 border-4 border-[#0C62BF] border-t-transparent rounded-full" />
                 ) : status === "success" ? (
-                  <img src="/assets/chembizzlogo.png" alt="ChemBizz" className="w-[110px] mx-auto" />
+                  <img src="src/images/chembizzlogo.png" alt="ChemBizz" className="w-[110px] mx-auto" />
                 ) : (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
