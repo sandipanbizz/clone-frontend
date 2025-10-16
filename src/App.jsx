@@ -125,8 +125,7 @@ function App() {
               path="/signup"
               element={
                 <>
-                  <Header />
-                  <CreateAccount />
+                   <CreateAccount />
                   <Footer />
                 </>
               }
@@ -135,8 +134,7 @@ function App() {
               path="/login"
               element={
                 <>
-                  <Header />
-                  <Login />
+                   <Login />
                   <Footer />
                 </>
               }
@@ -258,8 +256,7 @@ function App() {
               path="/forgot-password"
               element={
                 <>
-                  <Header />
-                  <ForgotPassword />
+                   <ForgotPassword />
                   <Footer />
                 </>
               }

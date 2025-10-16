@@ -5052,14 +5052,6 @@ const Buying_inquiry_detail = () => {
                 data={creditDebitData}
                 returnRequestdata={returnRequests}
               />
-              <div className="text-right p-4">
-                <button
-                  className="bg-darkBlue text-white px-4 py-2 rounded"
-                  onClick={() => setDisplayCreditDebit(false)}
-                >
-                  Close
-                </button>
-              </div>
             </div>
           </div>
         )}

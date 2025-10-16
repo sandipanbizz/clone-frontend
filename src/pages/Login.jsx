@@ -6,6 +6,7 @@ import headerImage from "../images/blue-background.png"
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 // import loginBanner from "../images/loginBanner1.png"
+import { FiLogIn } from "react-icons/fi"; // add this at the top
 
 // fontawesome icons
 
@@ -36,10 +37,11 @@ const Login = () => {
 
   const [loading, setLoading] = useState(false)
 
-  const [showPassword1, setShowPassword1] = useState(false);
+   const [showPassword , setShowPassword] = useState(false);
 
-  const togglePasswordVisibility1 = () => {
-    setShowPassword1(!showPassword1);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
 
@@ -165,85 +167,233 @@ const Login = () => {
       handleNavigate();
     }
   };
-
+ 
 
   return (
-    <div className='my-container bg-gray-100 m-auto'>
-      <div className='w-full md:w-[70%] m-auto py-10'>
-        <div className='flex md:flex-row flex-col bg-white rounded-2xl'>
-          {/* Image */}
-          <div className='md:w-[30%] md:p-0 px-10 py-32 md:flex hidden flex-col justify-center items-center rounded-2xl relative login-image'
-          >
-            <div className=' flex flex-col justify-center items-center absolute h-full w-full z-[1]'>
-              <h2 className='text-white text-[18px] text-center leading-7 font-bold'>Don’t have an account yet?</h2>
-              <p className='text-white text-sm mt-4 px-4 text-center'>Create Your Account to Start Your Digital
-                Business Experience with ChemBiZZ</p>
+    <div className="relative w-full min-h-screen flex items-center justify-center overflow-hidden">
 
-              <Link to="/signup">
-                <button className='bg-darkBlue text-white px-6 py-3 mt-4 border border-gray-200 rounded-md'>Register</button>
-              </Link>
-            </div>
-            <div className='absolute top-[0px] z-[1] rounded-tl-lg'>
-              <div className='flex justify-center'>
-                <img src={headerImage} alt="" className='w-[350px] rounded-tl-lg' />
-              </div>
-            </div>
-            <div className='absolute top-0 left-0 h-full w-full opacity-[0.3] bg-black z-1 rounded-2xl'>
-              <div className=''>
-              </div>
-            </div>
+      {/* ✅ Toast Notification */}
+      {toast.show && (
+        <div
+          style={{
+            position: "fixed",
+            bottom: 20,
+            right: 20,
+            padding: "12px 24px",
+            borderRadius: 8,
+            background: toast.type === "error" ? "#ef4444" : "#10b981",
+            color: "white",
+            fontWeight: 500,
+            zIndex: 10000,
+            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+          }}
+        >
+          {toast.message}
+        </div>
+      )}
+
+      {/* ✅ Background Image */}
+      <div className="absolute inset-0 z-0">
+        <img
+          src="src/assets/loginBg.svg"
+          alt="background"
+          className="w-full h-full object-cover"
+        />
+      </div>
+
+      {/* ✅ Centered Section */}
+      <section className="relative z-10 w-full flex items-center justify-center bg-transparent">
+        <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-16 lg:gap-24 px-6 md:px-12 lg:px-20 py-8 md:py-16 w-full max-w-[1300px]">
+
+          {/* LEFT: Logo + Text */}
+          <div className="order-2 lg:order-1 flex flex-col justify-center lg:items-start items-center text-center lg:text-left space-y-5">
+            <img
+              src="src/assets/chembizzlogo.png"
+              alt="ChemBizz Logo"
+              className="w-[250px] md:w-[300px] h-auto object-contain rounded-2xl"
+            />
+            <h2 className="text-[#0C62BF] font-bold text-2xl md:text-[38px] leading-tight md:leading-[60px]">
+              Smart Control. Secure Trade.
+            </h2>
+            <p className="text-[#000000] text-base md:text-[18px] leading-7 max-w-[600px]">
+              Connect buyers, suppliers, and data — all through ChemBizz.
+              Monitor inventory, orders, and customers from anywhere.
+            </p>
+            <p className="text-[#000000] text-base md:text-[18px] leading-7 max-w-[600px]">
+              Login to take charge of your chemical business  
+            </p>
+
           </div>
 
-          <ToastContainer />
-          {/* Form */}
-          <div className='p-10 w-full md:w-[70%] flex flex-col items-center justify-center md:h-[700px] rounded-2xl'>
-            <div className='flex flex-col w-full sm:w-[95%] '>
-              <h1 className='text-darkBlue text-center text-xl sm:text-4xl font-semibold'>Login to Your Account</h1>
+          {/* RIGHT: Login Card */}
+          <div className="order-1 lg:order-2 flex justify-end lg:justify-center">
+            <div
+              className="
+                w-full max-w-[520px]
+                bg-white/95 backdrop-blur-md
+                border border-[#00AEEF]
+                rounded-tl-[50px] rounded-tr-[10px] rounded-br-[10px] rounded-bl-[50px]
+                shadow-[0_10px_30px_rgba(0,74,173,0.15)]
+                px-8 md:px-10 py-14 md:py-20
+              "
+            >
+              <div className="text-center mb-6">
+                <h1
+                  className="font-[Poppins] font-bold text-[40px] leading-[100%] tracking-[1%] text-[#004aad]"
+                >
+                  Welcome Back
+                </h1>
 
-              <input
-                type="email"
-                value={email}
-                onChange={handleEmail}
-                onKeyDown={handleKeyDown}
-                placeholder='Enter Email'
-                className='mt-8 py-3 outline-none px-2 border border-[#0A122A]/[.5] rounded-md'
-              />
-              <div className='relative mt-8'>
-                <input
-                  name='password'
-                  onChange={handlePassword}
-                  onKeyDown={handleKeyDown}
-                  type={showPassword1 ? "text" : "password"}
-                  placeholder='Enter Password '
-                  className='outline-none py-3 px-2 border border-[#0A122A]/[.5] rounded-md w-full'
-                />
-                <FontAwesomeIcon
-                  icon={showPassword1 ? faEyeSlash : faEye}
-                  className='absolute top-[30%] right-[2%] cursor-pointer'
-                  onClick={togglePasswordVisibility1}
-                />
+                <div className="w-[300px] h-[1px] bg-[#0077B3] mx-auto mt-0 mb-3"></div>
+
+                <p
+                  className="font-[Poppins] font-normal text-[14px] leading-[100%] tracking-[0%] text-[#0C62BF]"
+                >
+                  Please login to your account
+                </p>
               </div>
 
-              <span className='text-darkBlue mt-6'><Link to="/forgot-password">Forget Password ?</Link> </span>
-              <div className='flex items-center justify-center'>
-                <button onClick={handleNavigate} className='bg-darkBlue mt-8 text-white h-[40px] w-[140px] rounded-md font-medium flex justify-center items-center'>
-                  {loading ? (
-                    <img src={loader} alt="" className='h-[30px] animate-spin' />
-                  ) : (
-                    <>
-                      Login
-                    </>
-                  )}
-                </button>
+
+              {/* Email */}
+              <div className="mt-10">
+                
+                <div className="relative">
+                  <input
+                    type="email"
+                    placeholder="Enter your email"
+                    value={email}
+                    onChange={handleEmail}
+                    onKeyDown={handleKeyDown}
+                    className="w-full h-[50px] border border-gray-300 rounded-md pr-[50px] pl-4 text-[16px] outline-none focus:border-[#004aad] transition"
+                  />
+                  <div className="absolute top-0 right-0 w-[50px] h-[50px] bg-[#0077B3] rounded-r-md flex items-center justify-center">
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="white"
+                      strokeWidth="2"
+                    >
+                      <rect x="3" y="5" width="18" height="14" rx="2" />
+                      <path d="M3 7l9 6 9-6" />
+                    </svg>
+                  </div>
+                </div>
               </div>
 
+              {/* Password */}
+              <div className="mt-6">
+               
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={handlePassword}
+                    onKeyDown={handleKeyDown}
+                    className="w-full h-[50px] border border-gray-300 rounded-md pr-[50px] pl-4 text-[16px] outline-none focus:border-[#004aad] transition"
+                  />
+                  <button
+                    type="button"
+                    onClick={togglePasswordVisibility}
+                    className="absolute top-0 right-0 w-[50px] h-[50px] bg-[#0077B3] rounded-r-md flex items-center justify-center"
+                  >
+                    {showPassword ? (
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="white"
+                        strokeWidth="2"
+                      >
+                        <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z" />
+                        <circle cx="12" cy="12" r="3" />
+                      </svg>
+                    ) : (
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="white"
+                        strokeWidth="2"
+                      >
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                        <line x1="1" y1="1" x2="23" y2="23" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+      <div className="mt-3 text-left">
+        <a
+          href="/forgot-password"
+          className="text-sm text-[#004aad] font-Poppins underline hover:text-[#0066cc] transition"
+        >
+          Forgot Password?
+        </a>
+      </div>
+
+      {/* Submit */}
+      <button
+        onClick={handleNavigate}
+        disabled={loading}
+        className={`mt-8 w-full h-[50px] flex items-center justify-center gap-3 rounded-md text-white font-semibold text-[16px] transition-all duration-300 ${
+          loading
+            ? "bg-gray-500 cursor-not-allowed"
+            : "bg-[#0077B3] hover:bg-[#00AEEF]"
+        }`}
+      >
+        {loading ? (
+          <>
+            <svg
+              className="animate-spin h-5 w-5 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8v8z"
+              ></path>
+            </svg>
+            Logging in...
+          </>
+        ) : (
+          <>
+            Sign In
+            <FiLogIn classNa    me="text-[20px]" /> {/* Icon on right side */}
+          </>
+        )}
+      </button>
+
+      {/* Sign up */}
+      <p className="mt-6 text-center text-sm text-gray-500">
+        Don&apos;t have an account?{" "}
+        <button
+          onClick={() => navigate("/signup")}
+          className="text-[#004aad] font-semibold underline hover:text-[#0066cc] transition"
+        >
+          Sign Up
+        </button>
+        </p>
             </div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
-
-  )
-}
-
-export default Login
+  );
+};
+export default Login;

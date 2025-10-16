@@ -23,10 +23,10 @@ ReactDOM.createRoot(document.getElementById('root')).render(
               <SocketContextProvider>
                 <SharedStateProvider>
                   <DisplayCreditDebitProvider>
-                  <div className='max-w-[1600px] m-auto'>
-                    <App />
-
-                  </div>
+                    {/* ✅ Full-width + full-height wrapper */}
+                    <div className="w-full min-h-screen bg-white overflow-x-hidden">
+                      <App />
+                    </div>
                   </DisplayCreditDebitProvider>
                 </SharedStateProvider>
               </SocketContextProvider>
