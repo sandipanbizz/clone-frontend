@@ -87,25 +87,18 @@ const formatDate = (dateString) => {
   return `${day}-${month}-${year}`;
 };
 const calculateReturnTotals = (array) => {
-  return array.reduce(
-    (totals, item) => {
-      const qty = parseFloat(item.return_qty || 0);
-      const rate = parseFloat(item.rate || 0);
-      const gstPercent = parseFloat(item.igst || 0);
+  if (!array || array.length === 0) {
+    return { totalQuantity: 0, totalTaxable: 0, totalGst: 0, totalAmount: 0 };
+  }
 
-      const taxable = qty * rate;
-      const gstAmount = (taxable * gstPercent) / 100;
-      const total = taxable + gstAmount;
-
-      totals.totalQuantity += qty;
-      totals.totalTaxable += taxable;
-      totals.totalGst += gstAmount;
-      totals.totalAmount += total;
-
-      return totals;
-    },
-    { totalQuantity: 0, totalTaxable: 0, totalGst: 0, totalAmount: 0 }
-  );
+  // For single return item, use the direct values
+  const item = array[0];
+  return {
+    totalQuantity: item.total_return_qty || 0,
+    totalTaxable: (item.total_return_amount || 0) / (1 + (item.products?.[0]?.igst || 0) / 100),
+    totalGst: (item.total_return_amount || 0) - ((item.total_return_amount || 0) / (1 + (item.products?.[0]?.igst || 0) / 100)),
+    totalAmount: item.total_return_amount || 0
+  };
 };
 
 const CreditDebitNote = ({ data, returnRequestdata }) => {
@@ -154,8 +147,7 @@ const CreditDebitNote = ({ data, returnRequestdata }) => {
   };
 
   const [userData, setUserData] = useState("");
-  console.log(userData,"userData");
-  
+
   const [companyPhoto, setCompanyPhoto] = useState("");
   const [gstCheck, setGstCheck] = useState("");
   const [termsAndConditions, setTermsAndConditions] = useState(
@@ -199,8 +191,8 @@ const CreditDebitNote = ({ data, returnRequestdata }) => {
       },
     });
     const data = await res.json();
-    console.log(data,"data");
-    
+   
+
     setUserData(data.companyDetails?.[0]);
   };
 
@@ -538,8 +530,8 @@ const CreditDebitNote = ({ data, returnRequestdata }) => {
                           >
                             {item?.status
                               ? item.status
-                                  .replace(/_/g, " ")
-                                  .replace(/\b\w/g, (l) => l.toUpperCase())
+                                .replace(/_/g, " ")
+                                .replace(/\b\w/g, (l) => l.toUpperCase())
                               : ""}
                           </p>
                         </div>
@@ -714,8 +706,11 @@ const CreditDebitNote = ({ data, returnRequestdata }) => {
                       {e.hsn}
                     </td>
                     <td className="border-blue-400 border-r-[3px] font-medium py-2 text-center text-xs">
-                      {e.qty}
-                      {e.qty_type}{" "}
+                      {/* Show return quantity instead of original quantity */}
+                      {returnRequestdata && returnRequestdata.length > 0
+                        ? `${returnRequestdata[0]?.total_return_qty || 0} Kg`
+                        : `${e.qty}${e.qty_type}`
+                      }
                     </td>
                     <td className="border-blue-400 border-r-[3px] font-medium  py-2 text-center text-xs">
                       <p className="flex items-center justify-center">
@@ -726,12 +721,13 @@ const CreditDebitNote = ({ data, returnRequestdata }) => {
                     <td className="border-blue-400 border-r-[3px] font-medium  py-2 text-center text-xs">
                       <p className="flex items-center justify-center">
                         <RupeesIcon />
-                        {e.taxable_amount}
+                      {returnTotals.totalTaxable.toFixed(2)}
                       </p>
                     </td>
                     {gstCheck === "igst" && (
                       <td className="border-blue-400 border-r-[3px] font-medium  py-2 text-center text-xs">
-                        {e.gstAmount.toFixed()}({e.igst}%)
+                        {/* {e.gstAmount.toFixed()}({e.igst}%) */}
+                         {returnTotals.totalGst.toFixed(2)}
                       </td>
                     )}
                     {gstCheck === "sgst" && (
@@ -749,52 +745,48 @@ const CreditDebitNote = ({ data, returnRequestdata }) => {
                     <td className="border-blue-400 border-r-[3px] font-medium  py-2 text-center text-xs">
                       <p className="flex items-center justify-center">
                         <RupeesIcon />
-                        {e.total}
+                             {returnRequestdata[0]?.total_return_amount?.toFixed(2) || "0.00"}
                       </p>
                     </td>
                   </tr>
                 ))}
 
-              <tr className="border-blue-400 border-[3px] bg-blue-100 text-xs">
-                <td
-                  colSpan={3}
-                  className="py-2 border-blue-400 border-r-[3px] text-end font-semibold pe-2"
-                >
-                  Total
-                </td>
-                <td className="py-2 border-blue-400 border-r-[3px] text-end font-semibold pe-2">
-                  {totals.totalQuantity}Kg
-                </td>
-                <td className="py-2 border-blue-400 border-r-[3px] text-end font-semibold pe-2">
-                  <p className="flex items-center justify-center">
-                    {/* <RupeesIcon />
-                              {totals.totalRate} */}
-                  </p>
-                </td>
-                <td className="py-2 border-blue-400 border-r-[3px] text-end font-semibold pe-2">
-                  <p className="flex items-center justify-center">
-                    <RupeesIcon />
-                    {totals.totalTaxable.toFixed(2)}
-                  </p>
-                </td>
-                <td className="py-2 border-blue-400 border-r-[3px] text-end font-semibold pe-2">
-                  <p className="flex items-center justify-center">
-                    <RupeesIcon />
-                    {totals.totalGstAmount.toFixed(2)}
-                  </p>
-                </td>
-                <td className="py-2 border-blue-400 border-r-[3px] text-end font-semibold pe-2">
-                  <p className="flex items-center justify-center">
-                    <RupeesIcon />
-                    {totals.totalAmount.toFixed(2)}
-                  </p>
-                </td>
-              </tr>
+              {/* Show Return Summary in the main table instead */}
+              {/* {returnRequestdata && returnRequestdata.length > 0 && (
+                <tr className="border-blue-400 border-[3px] bg-yellow-100 text-xs">
+                  <td colSpan={3} className="py-2 border-blue-400 border-r-[3px] text-end font-semibold pe-2">
+                    Return Summary
+                  </td>
+                  <td className="py-2 border-blue-400 border-r-[3px] text-end font-semibold pe-2">
+                    {returnRequestdata[0]?.total_return_qty || 0} Kg
+                  </td>
+                  <td className="py-2 border-blue-400 border-r-[3px] text-end font-semibold pe-2">
+                  </td>
+                  <td className="py-2 border-blue-400 border-r-[3px] text-end font-semibold pe-2">
+                    <p className="flex items-center justify-center">
+                      <RupeesIcon />
+                      {returnTotals.totalTaxable.toFixed(2)}
+                    </p>
+                  </td>
+                  <td className="py-2 border-blue-400 border-r-[3px] text-end font-semibold pe-2">
+                    <p className="flex items-center justify-center">
+                      <RupeesIcon />
+                      {returnTotals.totalGst.toFixed(2)}
+                    </p>
+                  </td>
+                  <td className="py-2 border-blue-400 border-r-[3px] text-end font-semibold pe-2">
+                    <p className="flex items-center justify-center">
+                      <RupeesIcon />
+                      {returnRequestdata[0]?.total_return_amount?.toFixed(2) || "0.00"}
+                    </p>
+                  </td>
+                </tr>
+              )} */}
             </tbody>
           </table>
 
           <div className="border-blue-400 border-l-[3px] border-b-[3px] grid grid-cols-[1fr]">
-            <div className="py-4 border-blue-400 border-blue-400 border-r-[3px]"></div>
+            <div className="border-blue-400 border-blue-400 border-r-[3px]"></div>
             <div className="grid grid-cols-[1.8fr,1.2fr,]">
               <div className="border-blue-400 ">
                 <div className="text-xs font-medium text-center border-blue-400 border-b-[3px] border-t-[3px] py-1">
@@ -953,8 +945,8 @@ const CreditDebitNote = ({ data, returnRequestdata }) => {
                         <p className="font-semibold">
                           {item?.status
                             ? item.status
-                                .replace(/_/g, " ")
-                                .replace(/\b\w/g, (l) => l.toUpperCase())
+                              .replace(/_/g, " ")
+                              .replace(/\b\w/g, (l) => l.toUpperCase())
                             : ""}
                         </p>
                       </div>
