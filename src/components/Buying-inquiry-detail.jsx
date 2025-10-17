@@ -2042,19 +2042,17 @@ const Buying_inquiry_detail = () => {
                       </>
                     )}
 
-                  {userPost === "seller" ? (
+                  {/* {userPost === "seller" ? (
                     <div className="overflow-x-auto sm:overflow-x-visible">
                       <div
                         className="relative flex justify-between mb-8 mx-5"
-                        style={{ width: `${totalWidth}%` }} // Tailwind can't compile w-[${...}%]
+                        style={{ width: `${totalWidth}%` }} 
                       >
-                        {/* base line */}
                         <div
                           className="absolute left-0 top-1/2 -translate-y-1/2 h-[10px] w-full rounded z-0"
                           style={{ backgroundColor: "rgba(169,169,169,0.5)" }}
                         />
 
-                        {/* progress line */}
                         <div
                           className="absolute left-0 top-1/2 -translate-y-1/2 h-[10px] rounded z-0"
                           style={{
@@ -2066,40 +2064,46 @@ const Buying_inquiry_detail = () => {
                         {statuses.map((status, index) => {
                           const statusWidth = (index / statuses.length) * 100;
                           const isCompleted =
-                            (userPost === "seller"
-                              ? percentCompleteForSeller
-                              : percentCompleteForBuyer) >= statusWidth;
-
-                          const dateStr =
-                            (visitDate &&
-                              (() => {
-                                const v = visitDate.find((x) => x.status === status);
-                                return v ? formatDate(v.dateAndTime) : "";
-                              })()) ||
-                            "";
-
+                            percentCompleteForSeller >= statusWidth;
                           return (
-                            <div key={index} className="text-center relative z-10"> {/* keep above lines */}
+                            <div key={index} className="text-center relative z-10"> 
                               <img
                                 src={imageFunction(status)}
                                 alt=""
-                                className={`py-2 px-2 text-white rounded-[50%] h-[40px] ${isCompleted ? "bg-[#09BB44]" : "bg-gray-400"
-                                  }`}
+                                className={`py-2 px-2 bg-${isCompleted ? "[#09BB44]" : "gray-400"
+                                  } text-white rounded-[50%] h-[40px]`}
                               />
                               <p className="text-[10px] font-medium absolute w-[90px] left-[-50%] text-center">
                                 {status}
                               </p>
-                              {dateStr && (
-                                <p className="text-[10px] font-medium absolute w-[90px] left-[-50%] bottom-[-30px] text-center">
-                                  {dateStr}
-                                </p>
-                              )}
+                              {visitDate &&
+                                visitDate.map(
+                                  (visit) =>
+                                    visit.status === status && (
+                                      <p
+                                        key={visit.status}
+                                        className="text-[10px] font-medium absolute w-[90px] left-[-50%] bottom-[-30px] text-center"
+                                      >
+                                        {formatDate(visit.dateAndTime) || ""}
+                                      </p>
+                                    )
+                                )}
                             </div>
                           );
                         })}
+
+                        <hr
+                          className="absolute left-0 right-0 top-[42%] z-[-1]"
+                          style={{
+                            width: "100%",
+                            height: "10px",
+                            backgroundColor: `rgba(169, 169, 169, 0.5)`,
+                            background: `linear-gradient(to right, #09BB44 ${percentCompleteForSeller + 20
+                              }%, rgba(169, 169, 169, 0.5) ${percentCompleteForSeller}%)`,
+                          }}
+                        />
                       </div>
                     </div>
-
                   ) : (
                     <div
                       className={`flex justify-between relative mb-8 mx-5 w-[${totalWidth}%]`}
@@ -2255,6 +2259,124 @@ const Buying_inquiry_detail = () => {
                         }}
                       />
                     </div>
+                  )} */}
+                  {userPost === "seller" ? (
+                    <div className="overflow-x-auto sm:overflow-x-visible">
+                      <div
+                        className="relative flex justify-between mb-8 mx-5"
+                        style={{ width: `${totalWidth}%` }} // Tailwind can't compile w-[${...}%]
+                      >
+                        {/* base line */}
+                        <div
+                          className="absolute left-0 top-1/2 -translate-y-1/2 h-[10px] w-full rounded z-0"
+                          style={{ backgroundColor: "rgba(169,169,169,0.5)" }}
+                        />
+
+                        {/* progress line */}
+                        <div
+                          className="absolute left-0 top-1/2 -translate-y-1/2 h-[10px] rounded z-0"
+                          style={{
+                            width: `${Math.min(
+                              (userPost === "seller"
+                                ? percentCompleteForSeller
+                                : percentCompleteForBuyer) + 20,
+                              100
+                            )}%`,
+                            backgroundColor: "#09BB44",
+                          }}
+                        />
+
+                        {statuses.map((status, index) => {
+                          const statusWidth = (index / statuses.length) * 100;
+                          const isCompleted =
+                            (userPost === "seller"
+                              ? percentCompleteForSeller
+                              : percentCompleteForBuyer) >= statusWidth;
+
+                          const dateStr =
+                            (visitDate &&
+                              (() => {
+                                const v = visitDate.find((x) => x.status === status);
+                                return v ? formatDate(v.dateAndTime) : "";
+                              })()) ||
+                            "";
+
+                          return (
+                            <div key={index} className="text-center relative z-10">
+                              <img
+                                src={imageFunction(status)}
+                                alt=""
+                                className={`py-2 px-2 text-white rounded-[50%] h-[40px] ${isCompleted ? "bg-[#09BB44]" : "bg-gray-400"
+                                  }`}
+                              />
+                              <p className="text-[10px] font-medium absolute w-[90px] left-[-50%] text-center">
+                                {status}
+                              </p>
+                              {dateStr && (
+                                <p className="text-[10px] font-medium absolute w-[90px] left-[-50%] bottom-[-30px] text-center">
+                                  {dateStr}
+                                </p>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ) : (
+                    /* BUYER SIDE - UPDATED */
+                    <div className="overflow-x-auto sm:overflow-x-visible">
+                      <div
+                        className="relative flex justify-between mb-8 mx-5"
+                        style={{ width: `${totalWidth}%` }} // Tailwind can't compile w-[${...}%]
+                      >
+                        {/* base line */}
+                        <div
+                          className="absolute left-0 top-1/2 -translate-y-1/2 h-[10px] w-full rounded z-0"
+                          style={{ backgroundColor: "rgba(169,169,169,0.5)" }}
+                        />
+
+                        {/* progress line */}
+                        <div
+                          className="absolute left-0 top-1/2 -translate-y-1/2 h-[10px] rounded z-0"
+                          style={{
+                            width: `${Math.min(percentCompleteForBuyer + 20, 100)}%`,
+                            backgroundColor: "#09BB44",
+                          }}
+                        />
+
+                        {statuses.map((status, index) => {
+                          const statusWidth = (index / statuses.length) * 100;
+                          const isCompleted = percentCompleteForBuyer >= statusWidth;
+
+                          const dateStr =
+                            (visitDate &&
+                              (() => {
+                                const v = visitDate.find((x) => x.status === status);
+                                return v ? formatDate(v.dateAndTime) : "";
+                              })()) ||
+                            "";
+
+                          return (
+                            <div key={index} className="text-center relative z-10">
+                              <img
+                                src={imageFunction(status)}
+                                alt=""
+                                className={`py-2 px-2 text-white rounded-[50%] h-[40px] ${isCompleted ? "bg-[#09BB44]" : "bg-gray-400"
+                                  }`}
+                              />
+                              <p className="text-[10px] font-medium absolute w-[90px] left-[-50%] text-center">
+                                {status}
+                              </p>
+                              {dateStr && (
+                                <p className="text-[10px] font-medium absolute w-[90px] left-[-50%] bottom-[-30px] text-center">
+                                  {dateStr}
+                                </p>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
                   )}
 
                   {returnRequests.length > 0 && (
@@ -2352,7 +2474,7 @@ const Buying_inquiry_detail = () => {
                                   <div className="relative mb-6">
                                     {/* Progress Line */}
                                     <div
-                                      className={`absolute ${isRejectedFlow ? "mr-[120px] ml-[120px]" : "mr-[50px] ml-[50px]"} left-0 right-0 top-5 h-1 bg-gray-300 z-0`}
+                                      className={`absolute ${isRejectedFlow ? "mr-[120px] ml-[120px]" : "mr-[45px] ml-[45px]"} left-0 right-0 top-5 h-1 bg-gray-300 z-0`}
                                     >
                                       <div
                                         className={`h-full transition-all duration-500 ${isRejectedFlow ? "bg-red-500" : ""}`}
@@ -2360,8 +2482,8 @@ const Buying_inquiry_detail = () => {
                                           // ✅ Return flow primary color (blue) instead of green
                                           backgroundColor: !isRejectedFlow ? "#007BCE" : undefined,
                                           width: `${isCompletedStatus || request.status === "rejected"
-                                            ? 100
-                                            : (currentReturnStatusIndex / (currentFlowStatuses.length - 1)) * 100
+                                              ? 100
+                                              : (currentReturnStatusIndex / (currentFlowStatuses.length - 1)) * 100
                                             }%`,
                                         }}
                                       ></div>
@@ -2416,13 +2538,13 @@ const Buying_inquiry_detail = () => {
                                       Current Status:{" "}
                                       <span
                                         className={`${isCompletedStatus
-                                          ? "text-green-600"
-                                          : request.status === "rejected"
-                                            ? "text-red-600"
-                                            : "text-blue-600"
+                                            ? "text-green-600"
+                                            : request.status === "rejected"
+                                              ? "text-red-600"
+                                              : "text-blue-600"
                                           }`}
                                       >
-                                        {formatReturnStatus(request.status).toUpperCase()}
+                                        {formatReturnStatus(request.status).toUpperCase().replace(/_/g, ' ')}
                                       </span>
                                     </p>
                                   </div>
