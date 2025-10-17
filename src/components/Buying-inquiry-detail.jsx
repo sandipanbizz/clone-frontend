@@ -2474,7 +2474,7 @@ const Buying_inquiry_detail = () => {
                                   <div className="relative mb-6">
                                     {/* Progress Line */}
                                     <div
-                                      className={`absolute ${isRejectedFlow ? "mr-[120px] ml-[120px]" : "mr-[45px] ml-[45px]"} left-0 right-0 top-5 h-1 bg-gray-300 z-0`}
+                                      className={`absolute ${isRejectedFlow ? "mr-[120px] ml-[120px]" : "mr-[50px] ml-[50px]"} left-0 right-0 top-5 h-1 bg-gray-300 z-0`}
                                     >
                                       <div
                                         className={`h-full transition-all duration-500 ${isRejectedFlow ? "bg-red-500" : ""}`}
